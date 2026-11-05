@@ -1,0 +1,42 @@
+# Build output
+target/
+build/
+dist/
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+src/main/resources/application.properties
+application-local.properties
+application-*.local.properties
+*.pem
+*.key
+*.p12
+*.jks
+
+# Database dumps and backups
+*.sql
+*.sql.gz
+*.dump
+*.bak
+*.backup
+*.old
+backups/
+db_backups/
+**/backups/
+**/db_backups/
+
+# Temporary reports
+encoding-report.csv
+encoding-suspects.csv
+
+# IDE and OS files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
