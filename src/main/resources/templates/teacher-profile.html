@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243247;
+        }
+        .topbar {
+            background: #183b65;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .brand { font-size: 20px; font-weight: bold; }
+        .topbar a { color: white; text-decoration: none; }
+        .container { max-width: 1000px; margin: 32px auto; padding: 0 18px; }
+        .heading { margin-bottom: 22px; }
+        .heading h1 { margin: 0 0 8px; color: #183b65; }
+        .heading p { margin: 0; color: #68778b; }
+        .profile-card {
+            background: white;
+            border-radius: 14px;
+            padding: 26px;
+            box-shadow: 0 5px 22px rgba(30, 55, 90, .08);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid #e7edf5;
+        }
+        .avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #e5eefb;
+            color: #183b65;
+            display: grid;
+            place-items: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        .profile-header h2 { margin: 0 0 7px; }
+        .muted { color: #718096; margin: 0; }
+        .section-title { margin: 24px 0 16px; font-size: 17px; }
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .detail {
+            padding: 15px;
+            background: #f7f9fc;
+            border: 1px solid #e8edf5;
+            border-radius: 9px;
+            min-width: 0;
+        }
+        .detail span {
+            display: block;
+            color: #718096;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .detail strong { overflow-wrap: anywhere; }
+        .notice {
+            margin-top: 22px;
+            padding: 16px;
+            border-radius: 9px;
+            background: #fff7e6;
+            border: 1px solid #f4dfad;
+            color: #79551b;
+            line-height: 1.6;
+        }
+        .actions { margin-top: 24px; }
+        .btn {
+            display: inline-block;
+            background: #183b65;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .details { grid-template-columns: 1fr; }
+            .profile-card { padding: 18px; }
+            .container { margin-top: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">College ERP</div>
+        <a href="/teacher/dashboard">Teacher Dashboard</a>
+    </header>
+
+    <main class="container">
+        <div class="heading">
+            <h1>My Profile</h1>
+            <p>View your professional information</p>
+        </div>
+
+        <section class="profile-card">
+            <div class="profile-header">
+                <div class="avatar" aria-hidden="true">&#128100;</div>
+                <div>
+                    <h2>Teacher Profile</h2>
+                    <p class="muted">College ERP System</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">Personal and Professional Details</h3>
+
+            <div class="details">
+                <div class="detail"><span>Full Name</span><strong th:text="${teacher != null ? teacher.firstName + ' ' + (teacher.lastName != null ? teacher.lastName : '') : 'Not available'}">Not available</strong></div>
+                <div class="detail"><span>Employee Code</span><strong th:text="${teacher != null ? teacher.employeeCode : 'Not available'}">Not available</strong></div>
+                <div class="detail"><span>Department</span><strong th:text="${departmentName != null ? departmentName : 'Not available'}">Not available</strong></div>
+                <div class="detail"><span>Qualification</span><strong th:text="${teacher != null && teacher.qualification != null ? teacher.qualification : 'Not available'}">Not available</strong></div>
+                <div class="detail"><span>Phone</span><strong th:text="${teacher != null && teacher.phone != null ? teacher.phone : 'Not available'}">Not available</strong></div>
+                <div class="detail"><span>Joining Date</span><strong th:text="${teacher != null && teacher.joiningDate != null ? teacher.joiningDate : 'Not available'}">Not available</strong></div>
+            </div>
+
+            <div class="notice" th:if="${teacher == null}">
+                <strong>Profile data not available.</strong>
+                Is login account ke saath linked teacher record nahi mila.
+            </div>
+
+            <div class="actions">
+                <a class="btn" href="/teacher/dashboard">Back to Dashboard</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

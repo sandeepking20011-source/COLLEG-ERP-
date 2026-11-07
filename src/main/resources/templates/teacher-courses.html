@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Courses | College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 28px;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1e293b;
+        }
+        .container { max-width: 1250px; margin: auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+        h1 { margin: 0 0 7px; font-size: 29px; }
+        h2 { margin: 0 0 17px; font-size: 19px; }
+        h3 { margin: 0 0 12px; font-size: 17px; }
+        .subtitle { margin: 0; color: #64748b; }
+        .back {
+            display: inline-block;
+            padding: 11px 17px;
+            border-radius: 8px;
+            background: #1d4ed8;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        .stat, .panel, .course-card {
+            background: white;
+            border: 1px solid #e7edf5;
+            border-radius: 13px;
+            box-shadow: 0 3px 14px #1725540b;
+        }
+        .stat { padding: 20px; }
+        .stat-label { color: #64748b; font-size: 13px; }
+        .stat-value {
+            display: block;
+            margin-top: 9px;
+            font-size: 27px;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+        .course-card {
+            padding: 23px;
+            margin-bottom: 20px;
+        }
+        .course-heading {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .course-code {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 23px;
+        }
+        .meta-item {
+            background: #f8fafc;
+            padding: 13px;
+            border-radius: 9px;
+        }
+        .meta-label {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+        .meta-value { font-weight: 600; overflow-wrap: anywhere; }
+        .section { margin-top: 22px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 560px; }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e8edf4;
+            font-size: 14px;
+        }
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        tbody tr:hover { background: #f8fbff; }
+        .empty {
+            padding: 16px;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #64748b;
+        }
+        .empty-main {
+            background: white;
+            border: 1px solid #e7edf5;
+            border-radius: 13px;
+            padding: 30px;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            h1 { font-size: 23px; }
+            .course-card { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header class="header">
+        <div>
+            <h1>My Courses</h1>
+            <p class="subtitle">Your assigned courses, subjects and weekly schedule.</p>
+        </div>
+        <a class="back" href="/teacher/dashboard">Back to Dashboard</a>
+    </header>
+
+    <section class="summary">
+        <div class="stat">
+            <span class="stat-label">Assigned Courses</span>
+            <span class="stat-value" th:text="${courses.size()}">0</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Total Enrolled Students</span>
+            <span class="stat-value"
+                  th:text="${#aggregates.sum(courses.![enrolled_students])} ?: 0">0</span>
+        </div>
+    </section>
+
+    <div th:if="${courses.isEmpty()}" class="empty-main">
+        <h2>No Assigned Courses</h2>
+        <p>Abhi aapke account ke liye timetable mein koi course assign nahi mila.</p>
+        <p>Please ask the administrator to check your teacher and timetable assignment.</p>
+    </div>
+
+    <article class="course-card" th:each="course, stat : ${courses}">
+
+        <div class="course-heading">
+            <div>
+                <h2 th:text="${course['course_name']}">Course Name</h2>
+                <span class="course-code" th:text="${course['course_code']}">CODE</span>
+            </div>
+            <strong th:text="'Course #' + ${stat.count}">Course #1</strong>
+        </div>
+
+        <div class="meta">
+            <div class="meta-item">
+                <span class="meta-label">Department</span>
+                <span class="meta-value" th:text="${course['department_name']}">Department</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Course Duration</span>
+                <span class="meta-value">
+                    <span th:text="${course['duration_years']}">2</span> years
+                </span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Enrolled Students</span>
+                <span class="meta-value" th:text="${course['enrolled_students']}">0</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Academic Year</span>
+                <span class="meta-value"
+                      th:text="${course['academic_years']} ?: 'Not assigned'">2026-2027</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Semester</span>
+                <span class="meta-value"
+                      th:text="${course['semesters']} ?: 'Not assigned'">1</span>
+            </div>
+        </div>
+
+        <section class="section">
+            <h3>Assigned Subjects</h3>
+            <div class="table-wrap"
+                 th:if="${!course['subjects'].isEmpty()}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Subject Code</th>
+                        <th>Credits</th>
+                        <th>Semester</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="subject : ${course['subjects']}">
+                        <td th:text="${subject['subject_name']}">Subject</td>
+                        <td th:text="${subject['subject_code']}">SUB001</td>
+                        <td th:text="${subject['credits']} ?: '-'">0</td>
+                        <td th:text="${subject['semester']}">1</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty" th:if="${course['subjects'].isEmpty()}">
+                No subjects assigned through this teacher's timetable.
+            </div>
+        </section>
+
+        <section class="section">
+            <h3>Weekly Timetable</h3>
+            <div class="table-wrap"
+                 th:if="${!course['schedule'].isEmpty()}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Classroom</th>
+                        <th>Building</th>
+                        <th>Semester</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="slot : ${course['schedule']}">
+                        <td th:text="${slot['day_of_week']}">Monday</td>
+                        <td th:text="${slot['start_time']}">09:00</td>
+                        <td th:text="${slot['end_time']}">10:00</td>
+                        <td th:text="${slot['room_number']}">Room 1</td>
+                        <td th:text="${slot['building_name']} ?: '-'">Building</td>
+                        <td th:text="${slot['semester']}">1</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty" th:if="${course['schedule'].isEmpty()}">
+                No timetable entries found.
+            </div>
+        </section>
+
+    </article>
+</div>
+</body>
+</html>

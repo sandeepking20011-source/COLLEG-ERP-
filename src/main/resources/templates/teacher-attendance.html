@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Attendance | College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #1f2937; }
+        header { background: #173b70; color: white; padding: 22px 5%; }
+        header h1 { margin: 0 0 7px; font-size: 26px; }
+        header p { margin: 0; color: #e0eaff; }
+        main { max-width: 1150px; margin: 28px auto; padding: 0 18px; }
+        .toolbar, .panel { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 3px 14px #1725540d; }
+        .toolbar { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; }
+        label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+        input, select { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 14px; background: white; }
+        input[type="date"] { min-width: 175px; }
+        #search { min-width: 220px; }
+        .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+        .stat { background: white; border-radius: 10px; padding: 15px 20px; min-width: 140px; flex: 1; box-shadow: 0 3px 14px #1725540d; }
+        .stat span { display: block; color: #64748b; font-size: 13px; margin-bottom: 7px; }
+        .stat strong { font-size: 24px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 650px; }
+        th, td { padding: 13px 12px; text-align: left; border-bottom: 1px solid #e5eaf2; }
+        th { background: #f8fafc; color: #475569; font-size: 12px; text-transform: uppercase; }
+        td { font-size: 14px; }
+        .status { min-width: 125px; }
+        .note { color: #64748b; font-size: 13px; line-height: 1.6; }
+        .back { display: inline-block; color: #174a8b; text-decoration: none; font-weight: bold; margin: 8px 0 25px; }
+        .empty { text-align: center; color: #64748b; padding: 25px; }
+        @media(max-width: 600px) { .toolbar > div, #search { width: 100%; min-width: 0; } }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Teacher Attendance</h1>
+    <p>Student attendance overview</p>
+</header>
+<main>
+    <div class="toolbar">
+        <div>
+            <label for="attendanceDate">Attendance Date</label>
+            <input id="attendanceDate" type="date">
+        </div>
+        <div>
+            <label for="search">Search Student</label>
+            <input id="search" type="search" placeholder="Name, roll no. or enrollment">
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><span>Total Students</span><strong id="totalCount">0</strong></div>
+        <div class="stat"><span>Present (selected)</span><strong id="presentCount">0</strong></div>
+        <div class="stat"><span>Absent (selected)</span><strong id="absentCount">0</strong></div>
+        <div class="stat"><span>Not Marked</span><strong id="unmarkedCount">0</strong></div>
+    </div>
+
+    <section class="panel">
+        <h2>Student Attendance</h2>
+        <p class="note">Status selection abhi is page par temporary hai. Database mein attendance save karne ke liye attendance entity, table aur save endpoint integrate karna hoga.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Enrollment No.</th>
+                        <th>Roll No.</th>
+                        <th>Student Name</th>
+                        <th>Semester</th>
+                        <th>Attendance Status</th>
+                    </tr>
+                </thead>
+                <tbody id="studentRows">
+                    <tr th:each="student : ${students}" class="student-row">
+                        <td th:text="${student.enrollmentNo}">Enrollment</td>
+                        <td th:text="${student.rollNo}">Roll No.</td>
+                        <td th:text="|${student.firstName} ${student.lastName}|">Student Name</td>
+                        <td th:text="${student.semester}">Semester</td>
+                        <td>
+                            <select class="status" aria-label="Attendance status">
+                                <option value="">Not Marked</option>
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                                <option value="Late">Late</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="emptyRow" th:if="${#lists.isEmpty(students)}">
+                        <td colspan="5" class="empty">Abhi students ka record nahi mila.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p id="noMatch" class="empty" hidden>Koi matching student nahi mila.</p>
+    </section>
+    <a class="back" href="/teacher/dashboard">← Back to Teacher Dashboard</a>
+</main>
+<script>
+    const dateInput = document.getElementById('attendanceDate');
+    const now = new Date();
+    dateInput.value = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString().slice(0, 10);
+
+    const rows = Array.from(document.querySelectorAll('.student-row'));
+    const search = document.getElementById('search');
+
+    function updateAttendance() {
+        const query = search.value.trim().toLowerCase();
+        let present = 0, absent = 0, unmarked = 0, visible = 0;
+
+        rows.forEach(row => {
+            const matches = row.innerText.toLowerCase().includes(query);
+            row.hidden = !matches;
+            if (!matches) return;
+            visible++;
+            const status = row.querySelector('.status').value;
+            if (status === 'Present') present++;
+            else if (status === 'Absent') absent++;
+            else if (status === '') unmarked++;
+        });
+
+        document.getElementById('totalCount').textContent = visible;
+        document.getElementById('presentCount').textContent = present;
+        document.getElementById('absentCount').textContent = absent;
+        document.getElementById('unmarkedCount').textContent = unmarked;
+        document.getElementById('noMatch').hidden = !(query && visible === 0);
+    }
+
+    search.addEventListener('input', updateAttendance);
+    document.querySelectorAll('.status').forEach(select =>
+        select.addEventListener('change', updateAttendance)
+    );
+    updateAttendance();
+</script>
+</body>
+</html>

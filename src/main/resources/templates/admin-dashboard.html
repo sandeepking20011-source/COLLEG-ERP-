@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard | College ERP</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+    color:#1e293b;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:270px;
+    height:100vh;
+    background:#0f172a;
+    overflow-y:auto;
+}
+
+.logo{
+    color:white;
+    text-align:center;
+    padding:25px 10px;
+    font-size:23px;
+    font-weight:bold;
+    border-bottom:1px solid #334155;
+}
+
+.module-title{
+    text-align:center;
+    padding:16px 5px;
+    color:#94a3b8;
+    font-size:13px;
+    text-transform:uppercase;
+}
+
+.menu{
+    list-style:none;
+    padding:15px;
+}
+
+.menu li{
+    margin-bottom:7px;
+}
+
+.menu a{
+    display:block;
+    padding:13px 16px;
+    color:#e2e8f0;
+    text-decoration:none;
+    border-radius:9px;
+    transition:.3s;
+}
+
+.menu a:hover{
+    background:#1e293b;
+    transform:translateX(3px);
+}
+
+.menu a.active{
+    background:#2563eb;
+    color:white;
+}
+
+.menu a.logout{
+    background:#dc2626;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:270px;
+    min-height:100vh;
+}
+
+.topbar{
+    background:white;
+    padding:18px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.topbar h2{
+    color:#0f172a;
+}
+
+.user{
+    background:#2563eb;
+    color:white;
+    padding:9px 18px;
+    border-radius:25px;
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    padding:30px;
+}
+
+.page-header{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    margin-bottom:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.page-header h1{
+    margin-bottom:8px;
+}
+
+.page-header p{
+    color:#64748b;
+}
+
+/* ================= STATS ================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+}
+
+.stat-icon{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.stat-card h3{
+    color:#64748b;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.stat-card h1{
+    color:#2563eb;
+}
+
+/* ================= GRID ================= */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+    margin-bottom:25px;
+}
+
+/* ================= CARD ================= */
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.card h2{
+    margin-bottom:20px;
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.quick-btn{
+    border:none;
+    padding:18px;
+    border-radius:10px;
+    cursor:pointer;
+    text-align:left;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    transition:.3s;
+}
+
+.quick-btn:hover{
+    background:#eff6ff;
+    border-color:#2563eb;
+    transform:translateY(-2px);
+}
+
+.quick-icon{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.quick-btn strong{
+    display:block;
+    font-size:15px;
+    color:#0f172a;
+}
+
+.quick-btn span{
+    color:#64748b;
+    font-size:12px;
+}
+
+/* ================= ACTIVITY ================= */
+
+.activity{
+    display:flex;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.activity:last-child{
+    border-bottom:none;
+}
+
+.activity-icon{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#dbeafe;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.activity-content strong{
+    display:block;
+    font-size:14px;
+}
+
+.activity-content small{
+    color:#64748b;
+}
+
+/* ================= TABLE ================= */
+
+.table-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    margin-bottom:25px;
+    overflow-x:auto;
+}
+
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:14px;
+    text-align:left;
+    white-space:nowrap;
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid #e2e8f0;
+    white-space:nowrap;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+/* ================= BADGES ================= */
+
+.badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.success{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.warning{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.info{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+/* ================= BUTTON ================= */
+
+.btn{
+    border:none;
+    padding:11px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+    opacity:.9;
+}
+
+.btn-primary{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-success{
+    background:#16a34a;
+    color:white;
+}
+
+.btn-warning{
+    background:#d97706;
+    color:white;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+/* ================= PROGRESS ================= */
+
+.progress-box{
+    margin-bottom:18px;
+}
+
+.progress-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    font-size:14px;
+}
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#e2e8f0;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    background:#2563eb;
+    border-radius:20px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.search-box input{
+    flex:1;
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:1000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(15,23,42,.75);
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-content{
+    width:100%;
+    max-width:550px;
+    background:white;
+    border-radius:16px;
+    padding:30px;
+    position:relative;
+}
+
+.close{
+    position:absolute;
+    right:20px;
+    top:12px;
+    font-size:30px;
+    cursor:pointer;
+    color:#64748b;
+}
+
+.close:hover{
+    color:#dc2626;
+}
+
+/* ================= FORM ================= */
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#2563eb;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr;
+    }
+
+    .search-box{
+        flex-direction:column;
+    }
+
+    .table-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+}
+
+/* ================= PRINT ================= */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .page-header,
+    .quick-actions,
+    .search-box,
+    .btn{
+        display:none !important;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:0;
+    }
+
+    .card,
+    .table-box,
+    .stat-card{
+        box-shadow:none;
+    }
+
+}
+
+
+/* =====================================================
+   MODERN COLLEGE ERP ADMIN DASHBOARD DESIGN
+   ===================================================== */
+
+body {
+    background: #f3f5f9;
+    color: #1e293b;
+}
+
+.sidebar {
+    width: 220px;
+    background: #111827;
+    border-right: 1px solid #263449;
+}
+
+.logo {
+    padding: 24px 12px;
+    font-size: 21px;
+    background: #111827;
+    border-bottom: 1px solid #263449;
+}
+
+.module-title {
+    text-align: left;
+    padding: 18px 20px 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.menu {
+    padding: 10px;
+}
+
+.menu li {
+    margin-bottom: 5px;
+}
+
+.menu a {
+    padding: 12px 13px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.menu a:hover {
+    background: #263449;
+    transform: none;
+}
+
+.menu a.active {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.main {
+    margin-left: 220px;
+    min-height: 100vh;
+}
+
+.topbar {
+    min-height: 65px;
+    background: #ffffff;
+    padding: 14px 25px;
+    border-bottom: 1px solid #e5eaf1;
+    box-shadow: 0 2px 8px rgba(15,23,42,.04);
+}
+
+.topbar h2 {
+    font-size: 19px;
+    color: #172033;
+}
+
+.user {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+    padding: 9px 16px;
+    border-radius: 8px;
+}
+
+.content {
+    padding: 25px;
+}
+
+.page-header {
+    background: transparent;
+    padding: 5px 0 20px;
+    margin-bottom: 5px;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.page-header h1 {
+    font-size: 23px;
+    color: #172033;
+}
+
+.page-header p {
+    font-size: 13px;
+    color: #718096;
+}
+
+.stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 19px;
+    border: 1px solid #e6ebf2;
+    border-radius: 11px;
+    box-shadow: 0 2px 7px rgba(15,23,42,.04);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 14px rgba(37,99,235,.09);
+}
+
+.stat-icon {
+    font-size: 25px;
+    margin-bottom: 9px;
+}
+
+.stat-card h3 {
+    color: #718096;
+    font-size: 12px;
+}
+
+.stat-card h1 {
+    color: #2563eb;
+    font-size: 25px;
+}
+
+.dashboard-grid {
+    grid-template-columns: minmax(0, 1.8fr) minmax(250px, .95fr);
+    gap: 17px;
+    align-items: start;
+    margin-bottom: 20px;
+}
+
+.dashboard-grid > .card {
+    padding: 20px;
+    border: 1px solid #e6ebf2;
+    border-radius: 11px;
+    box-shadow: 0 2px 7px rgba(15,23,42,.04);
+}
+
+.dashboard-grid > .card:nth-child(1) {
+    order: 3;
+    grid-column: 1 / -1;
+}
+
+.dashboard-grid > .card:nth-child(2) {
+    order: 1;
+}
+
+.dashboard-grid > .card:nth-child(3) {
+    order: 2;
+}
+
+.dashboard-grid .card h2 {
+    font-size: 17px;
+    margin-bottom: 17px;
+}
+
+.quick-actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.quick-btn {
+    min-width: 0;
+    padding: 13px 10px;
+    background: #ffffff;
+    border: 1px solid #e5eaf1;
+    border-radius: 9px;
+}
+
+.quick-btn:hover {
+    background: #eff6ff;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.quick-icon {
+    font-size: 24px;
+}
+
+.quick-btn strong {
+    font-size: 13px;
+}
+
+.quick-btn span {
+    font-size: 11px;
+}
+
+.activity {
+    gap: 10px;
+    padding: 13px 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.activity-icon {
+    width: 34px;
+    height: 34px;
+    background: #eff6ff;
+}
+
+.activity-content strong {
+    font-size: 13px;
+}
+
+.activity-content small {
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.card,
+.table-box {
+    border: 1px solid #e6ebf2;
+    border-radius: 11px;
+    box-shadow: 0 2px 7px rgba(15,23,42,.04);
+}
+
+.table-box {
+    background: #ffffff;
+}
+
+@media (min-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: minmax(0, 1.8fr) minmax(250px, .95fr);
+    }
+
+    .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 899px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid > .card:nth-child(1) {
+        order: 3;
+        grid-column: auto;
+    }
+
+    .dashboard-grid > .card:nth-child(2) {
+        order: 1;
+    }
+
+    .dashboard-grid > .card:nth-child(3) {
+        order: 2;
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        &#127891; College ERP
+    </div>
+
+    <div class="module-title">
+        Administration
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="/admin/dashboard" class="active">
+                &#127968; Admin Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/accountant/dashboard">
+                &#128176; Fees Module
+            </a>
+        </li>
+
+        <li>
+            <a href="/admin/courses">
+                &#127891; Academic Module
+            </a>
+        </li>
+
+        <li>
+            <a href="/accountant/attendance-module.html">
+                &#128203; Attendance Module
+            </a>
+        </li>
+
+        <li>
+            <a href="examination-module.html">
+                &#128221; Examination Module
+            </a>
+        </li>
+
+        <li>
+            <a th:href="@{/admin/students}">
+                &#128101;&#8205;&#127891; Student Management
+            </a>
+        </li>
+
+        <li>
+            <a href="/admin/teachers">
+                &#128101;&#8205;&#127979; Teacher Management
+            </a>
+        </li>
+
+        <li>
+            <a href="/accountant/reports">
+                &#128202; Reports
+            </a>
+        </li>
+
+        <li>
+            <a href="/" class="logout">
+                &#128682; Logout
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <h2>
+            &#127968; Administrator Dashboard
+        </h2>
+
+        <div class="user">
+            &#128100; Administrator
+        </div>
+
+    </div>
+
+
+    <div class="content">
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <h1>
+                &#127891; College ERP Administration
+            </h1>
+
+            <p>
+                Manage students, teachers, academics, fees,
+                attendance, examinations and system activities.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================= -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    &#128101;&#8205;&#127891;
+                </div>
+
+                <h3>
+                    Total Students
+                </h3>
+
+                <h1>
+                    2,845
+                </h1>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    &#128101;&#8205;&#127979;
+                </div>
+
+                <h3>
+                    Total Teachers
+                </h3>
+
+                <h1>
+                    126
+                </h1>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    &#128176;
+                </div>
+
+                <h3>
+                    Fee Collection
+                </h3>
+
+                <h1>
+                    &#8377;18.65 L
+                </h1>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    &#9203;
+                </div>
+
+                <h3>
+                    Pending Fees
+                </h3>
+
+                <h1>
+                    &#8377;4.82 L
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MAIN DASHBOARD GRID
+        ================================================= -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- SYSTEM OVERVIEW -->
+
+            <div class="card">
+
+                <h2>
+                    &#128202; System Overview
+                </h2>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Student Attendance
+                        </span>
+
+                        <strong>
+                            87%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="width:87%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Fee Collection
+                        </span>
+
+                        <strong>
+                            79%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="width:79%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Examination Completion
+                        </span>
+
+                        <strong>
+                            92%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="width:92%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Academic Activities
+                        </span>
+
+                        <strong>
+                            84%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="width:84%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="card">
+
+                <h2>
+                    &#9889; Quick Actions
+                </h2>
+
+
+                <div class="quick-actions">
+
+
+                    <button
+                        class="quick-btn"
+                        onclick="openModal('studentModal')">
+
+                        <div class="quick-icon">
+                            &#128101;&#8205;&#127891;
+                        </div>
+
+                        <strong>
+                            Add Student
+                        </strong>
+
+                        <span>
+                            Register new student
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-btn"
+                        onclick="openModal('teacherModal')">
+
+                        <div class="quick-icon">
+                            &#128101;&#8205;&#127979;
+                        </div>
+
+                        <strong>
+                            Add Teacher
+                        </strong>
+
+                        <span>
+                            Register new teacher
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-btn"
+                        onclick="location.href='/accountant/dashboard'">
+
+                        <div class="quick-icon">
+                            &#128179;
+                        </div>
+
+                        <strong>
+                            Fee Collection
+                        </strong>
+
+                        <span>
+                            Collect student fees
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-btn"
+                        onclick="window.print()">
+
+                        <div class="quick-icon">
+                            &#128202;
+                        </div>
+
+                        <strong>
+                            Print Report
+                        </strong>
+
+                        <span>
+                            Print dashboard report
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+<!-- =================================================
+             RECENT ACTIVITIES
+        ================================================= -->
+
+        <div class="card" style="margin-bottom:25px;">
+
+            <h2>
+                &#128276; Recent Activities
+            </h2>
+
+
+            <div class="activity">
+
+                <div class="activity-icon">
+                    &#128101;&#8205;&#127891;
+                </div>
+
+                <div class="activity-content">
+
+                    <strong>
+                        New student registered
+                    </strong>
+
+                    <small>
+                        Rahul Kumar - BCA Semester 3
+                        &#183; 10 minutes ago
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity">
+
+                <div class="activity-icon">
+                    &#128176;
+                </div>
+
+                <div class="activity-content">
+
+                    <strong>
+                        Fee payment received
+                    </strong>
+
+                    <small>
+                        Receipt REC1001 &#183; &#8377;15,000
+                        &#183; 25 minutes ago
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity">
+
+                <div class="activity-icon">
+                    &#128101;&#8205;&#127979;
+                </div>
+
+                <div class="activity-content">
+
+                    <strong>
+                        Teacher profile updated
+                    </strong>
+
+                    <small>
+                        Prof. Anil Sharma
+                        &#183; 1 hour ago
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity">
+
+                <div class="activity-icon">
+                    &#128221;
+                </div>
+
+                <div class="activity-content">
+
+                    <strong>
+                        Examination schedule updated
+                    </strong>
+
+                    <small>
+                        MCA Semester 2
+                        &#183; 2 hours ago
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+</div>
+
+
+        <!-- =================================================
+             USER MANAGEMENT TABLE
+        ================================================= -->
+
+        <div class="table-box">
+
+            <div class="table-header">
+
+                <h2>
+                    &#128101; Recent Users
+                </h2>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openModal('studentModal')">
+
+                    &#10133; Add User
+
+                </button>
+
+            </div>
+
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="userSearch"
+                    placeholder="Search by name, ID or role..."
+                    onkeyup="searchUsers()">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="resetUsers()">
+
+                    Reset
+
+                </button>
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            User ID
+                        </th>
+
+                        <th>
+                            Name
+                        </th>
+
+                        <th>
+                            Role
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Last Login
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="userTable">
+
+
+                    <tr>
+
+                        <td>
+                            1
+                        </td>
+
+                        <td>
+                            ADM001
+                        </td>
+
+                        <td>
+                            Sandeep Admin
+                        </td>
+
+                        <td>
+                            Administrator
+                        </td>
+
+                        <td>
+                            Administration
+                        </td>
+
+                        <td>
+
+                            <span class="badge success">
+                                Active
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Today, 10:30 AM
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            2
+                        </td>
+
+                        <td>
+                            TCH001
+                        </td>
+
+                        <td>
+                            Anil Sharma
+                        </td>
+
+                        <td>
+                            Teacher
+                        </td>
+
+                        <td>
+                            Computer Science
+                        </td>
+
+                        <td>
+
+                            <span class="badge success">
+                                Active
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Today, 09:45 AM
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            3
+                        </td>
+
+                        <td>
+                            TCH002
+                        </td>
+
+                        <td>
+                            Priya Singh
+                        </td>
+
+                        <td>
+                            Teacher
+                        </td>
+
+                        <td>
+                            Management
+                        </td>
+
+                        <td>
+
+                            <span class="badge success">
+                                Active
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Today, 09:20 AM
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            4
+                        </td>
+
+                        <td>
+                            STU001
+                        </td>
+
+                        <td>
+                            Rahul Kumar
+                        </td>
+
+                        <td>
+                            Student
+                        </td>
+
+                        <td>
+                            BCA
+                        </td>
+
+                        <td>
+
+                            <span class="badge success">
+                                Active
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Today, 08:55 AM
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            5
+                        </td>
+
+                        <td>
+                            STU002
+                        </td>
+
+                        <td>
+                            Priya Sharma
+                        </td>
+
+                        <td>
+                            Student
+                        </td>
+
+                        <td>
+                            MCA
+                        </td>
+
+                        <td>
+
+                            <span class="badge warning">
+                                Pending
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Yesterday
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             SYSTEM STATUS
+        ================================================= -->
+
+        <div class="dashboard-grid">
+
+            <div class="card">
+
+                <h2>
+                    &#128421; System Status
+                </h2>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        &#128994;
+                    </div>
+
+                    <div class="activity-content">
+
+                        <strong>
+                            ERP System
+                        </strong>
+
+                        <small>
+                            All systems operational
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        &#128994;
+                    </div>
+
+                    <div class="activity-content">
+
+                        <strong>
+                            Database
+                        </strong>
+
+                        <small>
+                            Connected successfully
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        &#128994;
+                    </div>
+
+                    <div class="activity-content">
+
+                        <strong>
+                            Payment Gateway
+                        </strong>
+
+                        <small>
+                            Online and operational
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>
+                    &#128197; Today's Summary
+                </h2>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            New Admissions
+                        </span>
+
+                        <strong>
+                            24
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Fee Payments
+                        </span>
+
+                        <strong>
+                            48
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Attendance Marked
+                        </span>
+
+                        <strong>
+                            1,925
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-box">
+
+                    <div class="progress-header">
+
+                        <span>
+                            Exams Scheduled
+                        </span>
+
+                        <strong>
+                            6
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADD STUDENT MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="studentModal">
+
+    <div class="modal-content">
+
+        <span
+            class="close"
+            onclick="closeModal('studentModal')">
+
+            &times;
+
+        </span>
+
+
+        <h2 style="margin-bottom:20px;">
+            &#128101;&#8205;&#127891; Add New Student
+        </h2>
+
+
+        <form onsubmit="addStudent(event)">
+
+            <div class="form-group">
+
+                <label>
+                    Student Name
+                </label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter student name"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Student ID
+                </label>
+
+                <input
+                    type="text"
+                    id="studentId"
+                    placeholder="Example: STU007"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Course
+                </label>
+
+                <select id="studentCourse" required>
+
+                    <option value="">
+                        Select Course
+                    </option>
+
+                    <option>
+                        BCA
+                    </option>
+
+                    <option>
+                        MCA
+                    </option>
+
+                    <option>
+                        BBA
+                    </option>
+
+                    <option>
+                        MBA
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="studentEmail"
+                    placeholder="student@example.com"
+                    required>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                &#10133; Add Student
+
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeModal('studentModal')">
+
+                Cancel
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADD TEACHER MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="teacherModal">
+
+    <div class="modal-content">
+
+        <span
+            class="close"
+            onclick="closeModal('teacherModal')">
+
+            &times;
+
+        </span>
+
+
+        <h2 style="margin-bottom:20px;">
+            &#128101;&#8205;&#127979; Add New Teacher
+        </h2>
+
+
+        <form onsubmit="addTeacher(event)">
+
+            <div class="form-group">
+
+                <label>
+                    Teacher Name
+                </label>
+
+                <input
+                    type="text"
+                    id="teacherName"
+                    placeholder="Enter teacher name"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Teacher ID
+                </label>
+
+                <input
+                    type="text"
+                    id="teacherId"
+                    placeholder="Example: TCH007"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Department
+                </label>
+
+                <select id="teacherDepartment" required>
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                    <option>
+                        Computer Science
+                    </option>
+
+                    <option>
+                        Management
+                    </option>
+
+                    <option>
+                        Commerce
+                    </option>
+
+                    <option>
+                        Mathematics
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="teacherEmail"
+                    placeholder="teacher@example.com"
+                    required>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                &#10133; Add Teacher
+
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeModal('teacherModal')">
+
+                Cancel
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   OPEN MODAL
+===================================================== */
+
+function openModal(id){
+
+    document.getElementById(id).style.display = "flex";
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function closeModal(id){
+
+    document.getElementById(id).style.display = "none";
+
+}
+
+
+/* =====================================================
+   ADD STUDENT
+===================================================== */
+
+function addStudent(event){
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("studentName").value;
+
+    const id =
+        document.getElementById("studentId").value;
+
+    const course =
+        document.getElementById("studentCourse").value;
+
+    alert(
+        "Student successfully added!\n\n" +
+        "Name: " + name +
+        "\nStudent ID: " + id +
+        "\nCourse: " + course
+    );
+
+    document.getElementById("studentModal").style.display =
+        "none";
+
+    event.target.reset();
+
+}
+
+
+/* =====================================================
+   ADD TEACHER
+===================================================== */
+
+function addTeacher(event){
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("teacherName").value;
+
+    const id =
+        document.getElementById("teacherId").value;
+
+    const department =
+        document.getElementById("teacherDepartment").value;
+
+    alert(
+        "Teacher successfully added!\n\n" +
+        "Name: " + name +
+        "\nTeacher ID: " + id +
+        "\nDepartment: " + department
+    );
+
+    document.getElementById("teacherModal").style.display =
+        "none";
+
+    event.target.reset();
+
+}
+
+
+/* =====================================================
+   SEARCH USERS
+===================================================== */
+
+function searchUsers(){
+
+    const search =
+        document.getElementById("userSearch")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const rows =
+        document.querySelectorAll("#userTable tr");
+
+    rows.forEach(row => {
+
+        const text =
+            row.innerText.toLowerCase();
+
+        if(text.includes(search)){
+
+            row.style.display = "";
+
+        }
+        else{
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   RESET USERS
+===================================================== */
+
+function resetUsers(){
+
+    document.getElementById("userSearch").value = "";
+
+    const rows =
+        document.querySelectorAll("#userTable tr");
+
+    rows.forEach(row => {
+
+        row.style.display = "";
+
+    });
+
+}
+
+
+/* =====================================================
+   OUTSIDE MODAL CLICK
+===================================================== */
+
+window.onclick = function(event){
+
+    const studentModal =
+        document.getElementById("studentModal");
+
+    const teacherModal =
+        document.getElementById("teacherModal");
+
+
+    if(event.target === studentModal){
+
+        studentModal.style.display = "none";
+
+    }
+
+
+    if(event.target === teacherModal){
+
+        teacherModal.style.display = "none";
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers Management - College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 24px; color: #1f2937; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 24px; border-radius: 10px; }
+        h1 { color: #173b70; }
+        a, button { display: inline-block; padding: 10px 14px; margin: 4px; background: #174ea6; color: white; text-decoration: none; border: 0; border-radius: 5px; cursor: pointer; }
+        input, select { width: 100%; padding: 10px; margin: 6px 0 12px; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 5px; }
+        label { font-weight: 600; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .message { padding: 10px; border-radius: 5px; margin: 12px 0; background: #dcfce7; }
+        .error { background: #fee2e2; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 11px; border: 1px solid #ddd; text-align: left; }
+        th { background: #e8eef8; }
+        .muted { color: #64748b; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/admin/dashboard">Back to Admin Dashboard</a>
+    <h1>Teachers Management</h1>
+    <p class="muted">College ERP - Manage teacher records</p>
+
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p class="message error" th:if="${error}" th:text="${error}"></p>
+
+    <h2>Add New Teacher</h2>
+    <form method="post" action="/admin/teachers/save">
+        <div class="form-grid">
+            <div>
+                <label for="employeeCode">Employee Code *</label>
+                <input id="employeeCode" name="employeeCode" maxlength="30" required>
+            </div>
+            <div>
+                <label for="firstName">First Name *</label>
+                <input id="firstName" name="firstName" maxlength="50" required>
+            </div>
+            <div>
+                <label for="lastName">Last Name</label>
+                <input id="lastName" name="lastName" maxlength="50">
+            </div>
+            <div>
+                <label for="email">Teacher Email *</label>
+                <input id="email" name="email" type="email" maxlength="255" required autocomplete="email">
+            </div>
+            <div>
+                <label for="initialPassword">Initial Password *</label>
+                <input id="initialPassword" name="initialPassword" type="password"
+                       minlength="8" required autocomplete="new-password">
+                <small>Minimum 8 characters. Database mein password hash hokar save hoga.</small>
+            </div>
+            <div>
+                <label for="departmentId">Department</label>
+                <select id="departmentId" name="departmentId">
+                    <option value="0">Not assigned</option>
+                    <option th:each="department : ${departments}"
+                            th:value="${department['department_id']}"
+                            th:text="${department['department_name']}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" maxlength="20">
+            </div>
+            <div>
+                <label for="qualification">Qualification</label>
+                <input id="qualification" name="qualification" maxlength="100">
+            </div>
+            <div>
+                <label for="joiningDate">Joining Date</label>
+                <input id="joiningDate" name="joiningDate" type="date">
+            </div>
+        </div>
+        <button type="submit">Save Teacher</button>
+    </form>
+
+    <h2>Teacher Records</h2>
+    <div class="search-box">
+        <label for="teacherSearch">Search by Teacher Name or Employee Code</label>
+        <input id="teacherSearch" type="search"
+               placeholder="Enter name or employee code..."
+               oninput="filterTeacherRows()">
+    </div>
+    <p id="teacherSearchNoResults" style="display:none;">No matching teacher found.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>Teacher ID</th>
+                <th>Employee Code</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Qualification</th>
+                <th>Joining Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="teacher : ${teachers}">
+                <td th:text="${teacher['teacher_id']}"></td>
+                <td th:text="${teacher['employee_code']}"></td>
+                <td th:text="${teacher['first_name'] + ' ' + teacher['last_name']}"></td>
+                <td th:text="${teacher['department_name']}"></td>
+                <td th:text="${teacher['email']}"></td>
+                <td th:text="${teacher['phone']}"></td>
+                <td th:text="${teacher['qualification']}"></td>
+                <td th:text="${teacher['joining_date']}"></td>
+                <td>
+                    <a th:href="@{/admin/teachers/edit/{id}(id=${teacher['teacher_id']})}">Edit</a>
+                    <form method="post"
+                          th:action="@{/admin/teachers/delete/{id}(id=${teacher['teacher_id']})}"
+                          style="display:inline"
+                          onsubmit="return confirm('Are you sure you want to delete this teacher record?');">
+                        <button type="submit" style="background:#b91c1c;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(teachers)}">
+                <td colspan="9">No teacher records found. Add the first teacher using the form above.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+function filterTeacherRows() {
+    const query = document.getElementById("teacherSearch").value.trim().toLowerCase();
+    const rows = document.querySelectorAll(".table-wrap tbody tr");
+    let matched = 0;
+
+    rows.forEach(function(row) {
+        const cells = row.cells;
+
+        if (cells.length < 3) {
+            row.style.display = query ? "none" : "";
+            return;
+        }
+
+        const employeeCode = cells[1].textContent.toLowerCase();
+        const teacherName = cells[2].textContent.toLowerCase();
+        const isMatch = !query ||
+            employeeCode.includes(query) ||
+            teacherName.includes(query);
+
+        row.style.display = isMatch ? "" : "none";
+        if (isMatch) matched++;
+    });
+
+    document.getElementById("teacherSearchNoResults").style.display =
+        query && matched === 0 ? "" : "none";
+}
+</script>
+</body>
+</html>

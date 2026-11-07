@@ -1,0 +1,174 @@
+{`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Login | College ERP</title>
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background:linear-gradient(135deg,#1e3c72,#2a5298);
+    }
+
+    .login-box{
+        width:380px;
+        background:white;
+        padding:35px;
+        border-radius:15px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .login-box h2{
+        text-align:center;
+        margin-bottom:10px;
+        color:#1e3c72;
+    }
+
+    .login-box p{
+        text-align:center;
+        color:gray;
+        margin-bottom:25px;
+        font-size:14px;
+    }
+
+    .input-group{
+        margin-bottom:18px;
+    }
+
+    .input-group label{
+        display:block;
+        margin-bottom:6px;
+        font-weight:bold;
+        color:#333;
+    }
+
+    .input-group input{
+        width:100%;
+        padding:12px;
+        border:1px solid #ccc;
+        border-radius:8px;
+        outline:none;
+        font-size:15px;
+    }
+
+    .input-group input:focus{
+        border-color:#2a5298;
+    }
+
+    button{
+        width:100%;
+        padding:12px;
+        border:none;
+        background:#1e3c72;
+        color:white;
+        font-size:16px;
+        border-radius:8px;
+        cursor:pointer;
+    }
+
+    button:hover{
+        background:#16315c;
+    }
+
+    .footer{
+        text-align:center;
+        margin-top:18px;
+        font-size:13px;
+    }
+
+    .footer a{
+        color:#1e3c72;
+        text-decoration:none;
+        font-weight:bold;
+    }
+
+    #message{
+        text-align:center;
+        margin-top:15px;
+        font-weight:bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <h2>Student Login</h2>
+    <p>College ERP System</p>
+
+    <form onsubmit="studentLogin(event)">
+
+        <div class="input-group">
+            <label>Enrollment Number</label>
+            <input type="text" id="enrollment" placeholder="Enter Enrollment Number" required>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter Password" required>
+        </div>
+
+        <button type="submit">Login</button>
+
+        <div id="message"></div>
+
+    </form>
+
+    <div class="footer">
+        <a href="/">← Back to Main Login</a>
+    </div>
+
+</div>
+
+<script>
+
+function studentLogin(event){
+
+    event.preventDefault();
+
+    let enrollment=document.getElementById("enrollment").value;
+    let password=document.getElementById("password").value;
+
+    let message=document.getElementById("message");
+
+    // Demo Login
+
+    if(enrollment==="STU001" && password==="12345"){
+
+        message.style.color="green";
+        message.innerHTML="Login Successful...";
+
+        setTimeout(function(){
+
+            window.location.href="student-dashboard.html";
+
+        },1000);
+
+    }
+
+    else{
+
+        message.style.color="red";
+        message.innerHTML="Invalid Enrollment Number or Password";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>`}

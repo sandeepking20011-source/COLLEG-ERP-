@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pending Fees - College ERP</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f5f9;padding:22px}
+main{max-width:1200px;margin:auto;background:white;padding:22px;border-radius:12px}
+table{width:100%;border-collapse:collapse;margin-top:18px}th,td{padding:10px;border:1px solid #ddd;text-align:left}
+th{background:#7c2d12;color:white}input,select{padding:7px;margin:3px;max-width:150px}
+button{padding:8px 12px;background:#176b45;color:white;border:0;border-radius:5px}
+a{margin-right:12px}.msg{color:green}.err{color:#b91c1c}
+</style>
+</head>
+<body><main>
+<h1>Pending Fees</h1>
+<p class="msg" th:if="${message}" th:text="${message}"></p>
+<p class="err" th:if="${error}" th:text="${error}"></p>
+<p><a href="/accountant/dashboard">Dashboard</a><a href="/accountant/fees/new">+ Add New Fee</a><a href="/accountant/students">All Student Fees</a></p>
+<table>
+<thead><tr><th>Fee ID</th><th>Student ID</th><th>Fee Type</th><th>Total</th><th>Paid</th><th>Balance</th><th>Due Date</th><th>Status</th><th>Record Payment</th></tr></thead>
+<tbody>
+<tr th:each="fee : ${fees}">
+<td th:text="${fee.feeId}"></td><td th:text="${fee.studentId}"></td><td th:text="${fee.feeType}"></td>
+<td th:text="${fee.amount}"></td><td th:text="${fee.paidAmount}"></td><td th:text="${fee.balance}"></td>
+<td th:text="${fee.dueDate}"></td><td th:text="${fee.paymentStatus}"></td>
+<td>
+<form th:action="@{/accountant/payments/save}" method="post">
+<input type="hidden" name="feeId" th:value="${fee.feeId}">
+<input type="number" name="paymentAmount" min="0.01" step="0.01" th:attr="max=${fee.balance}" placeholder="Amount" required>
+<select name="paymentMethod"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option><option value="Card">Card</option></select>
+<input type="text" name="transactionId" maxlength="100" placeholder="Transaction ID (optional)">
+<button type="submit">Record Payment</button>
+</form>
+</td></tr>
+<tr th:if="${#lists.isEmpty(fees)}"><td colspan="9">Abhi koi pending fee record nahi hai.</td></tr>
+</tbody></table>
+</main></body></html>

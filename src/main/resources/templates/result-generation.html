@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Result Generation | College ERP</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;margin:0;background:#f1f5f9;color:#1e293b}
+header{background:#1e3a8a;color:white;padding:20px}
+main{max-width:1200px;margin:25px auto;padding:0 16px}
+.card{background:white;padding:22px;margin-bottom:20px;border-radius:10px;box-shadow:0 2px 8px #0001}
+h2{margin-top:0;color:#1e3a8a}
+label{display:block;margin-bottom:8px;font-weight:bold}
+select,button{padding:11px;border:1px solid #cbd5e1;border-radius:6px;font-size:15px}
+select{width:100%;max-width:500px;margin-bottom:14px}
+button{background:#1d4ed8;color:white;border:0;cursor:pointer}
+button:hover{background:#1e40af}
+.message{padding:12px;background:#dcfce7;color:#166534;border-radius:6px;margin:12px 0}
+.error{padding:12px;background:#fee2e2;color:#991b1b;border-radius:6px;margin:12px 0}
+.notice{padding:12px;background:#fef3c7;color:#92400e;border-radius:6px;margin:12px 0}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:11px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#eff6ff}
+nav{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+nav a{color:#1d4ed8;text-decoration:none;font-weight:bold}
+</style>
+</head>
+<body>
+<header><h1>College ERP - Result Generation</h1></header>
+<main>
+
+<div class="card">
+<h2>Select Examination</h2>
+
+<div class="message" th:if="${message}" th:text="${message}"></div>
+<div class="error" th:if="${error}" th:text="${error}"></div>
+
+<form method="get" action="/admin/result-generation">
+<label for="examId">Examination</label>
+<select id="examId" name="examId" required>
+<option value="">-- Select Examination --</option>
+<option th:each="exam : ${exams}"
+        th:value="${exam['exam_id']}"
+        th:text="${exam['exam_name'] + ' (' + exam['exam_type'] + ')'}"
+        th:selected="${selectedExamId != null and selectedExamId.toString() == exam['exam_id'].toString()}">
+</option>
+</select>
+<br>
+<button type="submit">View Examination Results</button>
+</form>
+
+<div th:if="${selectedExamId != null}">
+<p>
+<strong>Marks linked to selected exam:</strong>
+<span th:text="${linkedMarks}">0</span>
+</p>
+
+<div class="notice" th:if="${linkedMarks == 0}">
+No marks are linked to this examination. First save marks from Teacher Marks module by selecting this examination. Old unlinked marks will not be used.
+</div>
+
+<form method="post" action="/admin/result-generation/generate"
+      th:if="${linkedMarks > 0}"
+      onsubmit="return confirm('Generate results for this examination? Existing results will not be overwritten.');">
+<input type="hidden" name="examId" th:value="${selectedExamId}">
+<button type="submit">Generate Results</button>
+</form>
+</div>
+</div>
+
+<div class="card">
+<h2>Generated Subject-wise Results</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Exam</th>
+<th>Enrollment No.</th>
+<th>Student</th>
+<th>Subject Code</th>
+<th>Subject</th>
+<th>Obtained</th>
+<th>Total</th>
+<th>Percentage</th>
+<th>Grade</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr th:each="r : ${results}">
+<td th:text="${r['exam_name']}"></td>
+<td th:text="${r['enrollment_no']}"></td>
+<td th:text="${r['student_name']}"></td>
+<td th:text="${r['subject_code']}"></td>
+<td th:text="${r['subject_name']}"></td>
+<td th:text="${r['marks_obtained']}"></td>
+<td th:text="${r['total_marks']}"></td>
+<td th:text="${r['percentage']} + '%'"></td>
+<td th:text="${r['grade']}"></td>
+<td th:text="${r['result_status']}"></td>
+</tr>
+<tr th:if="${#lists.isEmpty(results)}">
+<td colspan="10">No generated results available for this selection.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<nav>
+<a href="/admin/examination-module.html">Examination Module</a>
+<a href="/admin/student-result-report">Student-wise Result Report</a>
+<a href="/admin/dashboard">Admin Dashboard</a>
+</nav>
+</main>
+</body>
+</html>

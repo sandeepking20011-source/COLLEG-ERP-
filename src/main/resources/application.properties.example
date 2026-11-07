@@ -1,19 +1,19 @@
 spring.application.name=demo
 
-# MySQL Database
-spring.datasource.url=${DB_URL:jdbc:mysql://127.0.0.1:3306/collegeerp}
-spring.datasource.username=${DB_USERNAME:root}
-spring.datasource.password=${DB_PASSWORD:}
+# Database settings are supplied by Railway environment variables.
+spring.datasource.url=${SPRING_DATASOURCE_URL:${DB_URL:jdbc:mysql://localhost:3306/collegeerp}}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:}}
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-# JPA / Hibernate
+# Keep schema changes controlled; do not auto-drop or recreate production data.
 spring.jpa.hibernate.ddl-auto=none
-spring.jpa.show-sql=true
+spring.jpa.show-sql=false
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 
-# Server
-server.port=8081
+# Railway supplies PORT; local development defaults to 8081.
+server.port=${PORT:8081}
 
-# Razorpay Test Mode Configuration
+# Razorpay Test Mode credentials are supplied as Railway variables.
 razorpay.key.id=${RAZORPAY_KEY_ID:}
 razorpay.key.secret=${RAZORPAY_KEY_SECRET:}

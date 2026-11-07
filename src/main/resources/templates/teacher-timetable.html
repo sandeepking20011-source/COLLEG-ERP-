@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Timetable | College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; background: #f5f7fb; }
+        h1 { color: #1f3b64; }
+        .table-wrap { overflow-x: auto; background: white; padding: 12px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #d8dee8; padding: 10px; text-align: left; }
+        th { background: #1f3b64; color: white; }
+        tr:nth-child(even) { background: #f1f5f9; }
+        .empty { padding: 18px; background: white; border-radius: 8px; }
+        a { display: inline-block; margin-top: 18px; }
+    </style>
+</head>
+<body>
+    <h1>Teacher Timetable</h1>
+    <p>Timetable entries loaded from the College ERP database.</p>
+
+    <div class="table-wrap" th:if="${timetableEntries != null and !#lists.isEmpty(timetableEntries)}">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Course ID</th>
+                    <th>Subject ID</th>
+                    <th>Teacher ID</th>
+                    <th>Classroom ID</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Semester</th>
+                    <th>Academic Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${timetableEntries}">
+                    <td th:text="${entry.timetableId}"></td>
+                    <td th:text="${entry.courseId}"></td>
+                    <td th:text="${entry.subjectId}"></td>
+                    <td th:text="${entry.teacherId}"></td>
+                    <td th:text="${entry.classroomId}"></td>
+                    <td th:text="${entry.dayOfWeek}"></td>
+                    <td th:text="${entry.startTime}"></td>
+                    <td th:text="${entry.endTime}"></td>
+                    <td th:text="${entry.semester}"></td>
+                    <td th:text="${entry.academicYear}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="empty" th:if="${timetableEntries == null or #lists.isEmpty(timetableEntries)}">
+        No timetable entries yet. The database currently has no timetable entries.
+    </p>
+
+    <a href="/teacher/dashboard">Back to Teacher Dashboard</a>
+</body>
+</html>

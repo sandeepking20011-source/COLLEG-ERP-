@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | College ERP</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background: #f3f6fb; color: #263445; }
+        header { background: #1e3c72; color: white; padding: 22px 6%; }
+        header h1 { font-size: 24px; }
+        header p { margin-top: 6px; opacity: .9; }
+        main { max-width: 1050px; margin: 35px auto; padding: 0 18px; }
+        .welcome { margin-bottom: 24px; }
+        .welcome h2 { color: #1e3c72; margin-bottom: 8px; }
+        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 18px rgba(0,0,0,.07); }
+        .details { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; }
+        .item { padding: 14px; background: #f7f9fd; border-radius: 8px; }
+        .item span { display: block; color: #68778a; font-size: 13px; margin-bottom: 7px; }
+        .item strong { color: #243b60; overflow-wrap: anywhere; }
+        .notice { background: #fff5df; color: #79520b; padding: 18px; border-radius: 8px; }
+        .back { display: inline-block; margin-top: 22px; color: #1e3c72; text-decoration: none; font-weight: bold; }
+        footer { text-align: center; padding: 25px; color: #778399; font-size: 13px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>College ERP System</h1>
+    <p>Student Portal</p>
+</header>
+
+<main>
+    <section class="welcome" th:if="${student != null}">
+        <h2>Welcome, <span th:text="${student.firstName}">Student</span>!</h2>
+        <p>Your academic information is available below.</p>
+    </section>
+
+    <section class="card" th:if="${student != null}">
+        <h3 style="margin-bottom:20px;">My Profile</h3>
+        <div class="details">
+            <div class="item">
+                <span>Full Name</span>
+                <strong><span th:text="${student.firstName}"></span> <span th:text="${student.lastName}"></span></strong>
+            </div>
+            <div class="item">
+                <span>Enrollment Number</span>
+                <strong th:text="${student.enrollmentNo}">-</strong>
+            </div>
+            <div class="item">
+                <span>Roll Number</span>
+                <strong th:text="${student.rollNo != null ? student.rollNo : 'Not assigned'}">-</strong>
+            </div>
+            <div class="item">
+                <span>Email</span>
+                <strong th:text="${student.email != null ? student.email : 'Not provided'}">-</strong>
+            </div>
+            <div class="item">
+                <span>Phone</span>
+                <strong th:text="${student.phone != null ? student.phone : 'Not provided'}">-</strong>
+            </div>
+            <div class="item">
+                <span>Semester</span>
+                <strong th:text="${student.semester != null ? student.semester : 'Not assigned'}">-</strong>
+            </div>
+            <div class="item">
+                <span>Course ID</span>
+                <strong th:text="${student.courseId != null ? student.courseId : 'Not assigned'}">-</strong>
+            </div>
+            <div class="item">
+                <span>Department ID</span>
+                <strong th:text="${student.departmentId != null ? student.departmentId : 'Not assigned'}">-</strong>
+            </div>
+            <div class="item">
+                <span>Admission Date</span>
+                <strong th:text="${student.admissionDate != null ? student.admissionDate : 'Not available'}">-</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="notice" th:if="${studentNotLinked}">
+        <h3>Student Profile Not Linked</h3>
+        <p>Your login is successful, but no Student record is linked to this account. Please contact the administrator.</p>
+    </section>
+
+    <section class="card" th:if="${student != null}" style="margin-top:25px;">
+        <h3 style="margin-bottom:20px;">My Fee Details</h3>
+
+        <p th:if="${#lists.isEmpty(fees)}" class="notice">
+            No fee records found for your account.
+        </p>
+
+        <div style="overflow-x:auto;" th:if="${!#lists.isEmpty(fees)}">
+            <table style="width:100%;border-collapse:collapse;text-align:left;">
+                <thead>
+                    <tr style="background:#f0f4fa;">
+                        <th style="padding:12px;">Fee Type</th>
+                        <th style="padding:12px;">Total Amount</th>
+                        <th style="padding:12px;">Paid Amount</th>
+                        <th style="padding:12px;">Balance</th>
+                        <th style="padding:12px;">Status</th>
+                        <th style="padding:12px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="fee : ${fees}" style="border-bottom:1px solid #e5eaf1;">
+                        <td style="padding:12px;" th:text="${fee.feeType}">Tuition Fee</td>
+                        <td style="padding:12px;" th:text="${'&#8377;' + fee.amount}">&#8377;0.00</td>
+                        <td style="padding:12px;" th:text="${'&#8377;' + fee.paidAmount}">&#8377;0.00</td>
+                        <td style="padding:12px;font-weight:bold;" th:text="${'&#8377;' + fee.balance}">&#8377;0.00</td>
+                        <td style="padding:12px;" th:text="${fee.paymentStatus}">PENDING</td>
+                        <td style="padding:12px;">
+                            <button type="button" th:attr="data-fee-id=${fee.feeId}" onclick="createRazorpayTestOrder(this)">
+                                Pay Fee (Test Mode)
+                            </button>
+                            <span class="razorpay-test-result"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <a class="back" href="/">Back to Login</a>
+</main>
+
+<script>
+async function createRazorpayTestOrder(button) {
+    const result = button.parentElement.querySelector(".razorpay-test-result");
+    button.disabled = true;
+    result.textContent = "Preparing secure test payment...";
+    try {
+        const response = await fetch("/student/payments/razorpay/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ feeId: button.dataset.feeId }),
+            credentials: "same-origin"
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Order creation failed.");
+        }
+        result.textContent = "SUCCESS | Order ID: " + data.orderId + " | Amount: INR " + (data.amount / 100).toFixed(2);
+    } catch (error) {
+        result.textContent = "ERROR | " + error.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+</script>
+<footer>College ERP System</footer>
+</body>
+</html>

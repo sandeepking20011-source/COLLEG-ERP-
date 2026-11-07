@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Students | College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243247;
+        }
+        header {
+            background: #183b65;
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        header strong { font-size: 20px; }
+        header a { color: white; text-decoration: none; }
+        main { max-width: 1200px; margin: 30px auto; padding: 0 18px; }
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+        h1 { margin: 0 0 8px; color: #183b65; }
+        .sub { margin: 0; color: #718096; }
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 5px 22px rgba(30,55,90,.08);
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .count {
+            color: #183b65;
+            background: #eaf1fb;
+            padding: 9px 13px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        input {
+            width: min(100%, 330px);
+            padding: 11px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        th, td {
+            text-align: left;
+            padding: 13px 12px;
+            border-bottom: 1px solid #e8edf5;
+            font-size: 14px;
+        }
+        th { background: #f5f8fc; color: #42536b; }
+        tbody tr:hover { background: #f8fbff; }
+        .empty {
+            padding: 25px;
+            text-align: center;
+            color: #718096;
+        }
+        .back {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 12px 17px;
+            border-radius: 8px;
+            background: #183b65;
+            color: white;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .card { padding: 14px; }
+            main { margin-top: 22px; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <strong>College ERP</strong>
+    <a href="/teacher/dashboard">Teacher Dashboard</a>
+</header>
+
+<main>
+    <div class="heading">
+        <div>
+            <h1>Students List</h1>
+            <p class="sub">View and search student records</p>
+        </div>
+    </div>
+
+    <section class="card">
+        <div class="toolbar">
+            <div class="count">
+                Total Students: <span th:text="${#lists.size(students)}">0</span>
+            </div>
+            <input id="studentSearch" type="search"
+                   placeholder="Search name, roll no., enrollment..."
+                   aria-label="Search students">
+        </div>
+
+        <div class="table-wrap">
+            <table id="studentsTable">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Enrollment No.</th>
+                    <th>Roll No.</th>
+                    <th>Student Name</th>
+                    <th>Department ID</th>
+                    <th>Course ID</th>
+                    <th>Semester</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="student, stat : ${students}">
+                    <td th:text="${stat.count}">1</td>
+                    <td th:text="${student.enrollmentNo}">Enrollment</td>
+                    <td th:text="${student.rollNo != null ? student.rollNo : '-'}">Roll</td>
+                    <td th:text="${student.firstName + (student.lastName != null ? ' ' + student.lastName : '')}">Student Name</td>
+                    <td th:text="${student.departmentId != null ? student.departmentId : '-'}">-</td>
+                    <td th:text="${student.courseId != null ? student.courseId : '-'}">-</td>
+                    <td th:text="${student.semester != null ? student.semester : '-'}">-</td>
+                    <td th:text="${student.email != null ? student.email : '-'}">-</td>
+                    <td th:text="${student.phone != null ? student.phone : '-'}">-</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(students)}">
+                    <td colspan="9" class="empty">
+                        No student records found. Add students through the Admin Students module.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p id="noMatches" class="empty" hidden>No matching students found.</p>
+    </section>
+
+    <a class="back" href="/teacher/dashboard">Back to Teacher Dashboard</a>
+</main>
+
+<script>
+    const searchInput = document.getElementById("studentSearch");
+    const rows = Array.from(document.querySelectorAll("#studentsTable tbody tr"))
+        .filter(row => row.querySelectorAll("td").length === 9);
+    const noMatches = document.getElementById("noMatches");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+        let visible = 0;
+
+        rows.forEach(function (row) {
+            const matches = row.innerText.toLowerCase().includes(query);
+            row.hidden = !matches;
+            if (matches) visible++;
+        });
+
+        noMatches.hidden = visible !== 0 || query === "";
+    });
+</script>
+</body>
+</html>

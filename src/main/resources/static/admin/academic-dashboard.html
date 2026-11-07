@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Dashboard | College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243047;
+        }
+        header {
+            background: #243b67;
+            color: white;
+            padding: 24px;
+        }
+        header h1 { margin: 0 0 8px; }
+        main { max-width: 1000px; margin: 30px auto; padding: 0 18px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+        .card h2 { font-size: 20px; margin-top: 0; }
+        .card p { color: #5b6578; line-height: 1.5; }
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #2855a6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .back { display: inline-block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Academic Dashboard</h1>
+        <p>College ERP - Academic Management</p>
+    </header>
+
+    <main>
+        <a class="back" href="/admin/dashboard">← Back to Admin Dashboard</a>
+
+        <div class="grid">
+            <section class="card">
+                <h2>Courses</h2>
+                <p>Manage and view academic courses.</p>
+                <a href="/admin/courses">Open Courses</a>
+            </section>
+
+            <section class="card">
+                <h2>Departments</h2>
+                <p>View and manage college departments.</p>
+                <a href="/admin/departments">Open Departments</a>
+            </section>
+
+            <section class="card">
+                <h2>Subjects</h2>
+                <p>Open the subjects section.</p>
+                <a href="/subjects">Open Subjects</a>
+            </section>
+
+            <section class="card">
+                <h2>Examination</h2>
+                <p>Open the examination module.</p>
+                <a href="/admin/examination-module.html">Open Examination</a>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

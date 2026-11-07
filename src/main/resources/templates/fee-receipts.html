@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipts | College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; background: #f4f6f9; color: #222; }
+        h1 { color: #17365d; }
+        .links a, .receipt-link { display: inline-block; margin: 8px 8px 8px 0; padding: 10px 14px; background: #17365d; color: white; text-decoration: none; border-radius: 5px; }
+        .table-wrap { overflow-x: auto; background: white; padding: 12px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 11px; border: 1px solid #ddd; text-align: left; white-space: nowrap; }
+        th { background: #17365d; color: white; }
+        tr:nth-child(even) { background: #f5f7fa; }
+        .empty { padding: 20px; text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Fee Receipts</h1>
+    <p>College ERP - Accountant Module</p>
+
+    <div class="links">
+        <a th:href="@{/accountant/dashboard}">Accountant Dashboard</a>
+        <a th:href="@{/accountant/payments/history}">Payment History</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Receipt No.</th>
+                    <th>Student ID</th>
+                    <th>Fee ID</th>
+                    <th>Amount (INR)</th>
+                    <th>Payment Date</th>
+                    <th>Payment Mode</th>
+                    <th>Transaction ID</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${'RCP-' + payment.paymentId}">RCP-1</td>
+                    <td th:text="${payment.studentId}">1</td>
+                    <td th:text="${payment.feeId != null ? payment.feeId : '-'}">1</td>
+                    <td th:text="${payment.amount}">2000.00</td>
+                    <td th:text="${payment.paymentDate != null ? payment.paymentDate : '-'}">2026-10-17</td>
+                    <td th:text="${payment.paymentMethod != null ? payment.paymentMethod : '-'}">UPI</td>
+                    <td th:text="${payment.transactionId != null and !payment.transactionId.isEmpty() ? payment.transactionId : '-'}">-</td>
+                    <td>
+                        <a class="receipt-link"
+                           th:href="@{/accountant/receipts/{id}(id=${payment.paymentId})}">
+                            View / Print
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(payments)}">
+                    <td colspan="8" class="empty">Abhi koi receipt record nahi hai.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

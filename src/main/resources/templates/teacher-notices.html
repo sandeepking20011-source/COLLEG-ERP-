@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Notices | College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f4f7fb; color: #243047; }
+        main { max-width: 900px; margin: auto; }
+        .notice { background: #fff; border: 1px solid #dce4ef; border-radius: 10px; padding: 18px; margin: 16px 0; }
+        .notice h2 { margin-top: 0; color: #174ea6; }
+        .meta { color: #64748b; font-size: 14px; }
+        .empty { background: #fff; border-radius: 10px; padding: 20px; }
+        a { color: #174ea6; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Teacher Notices</h1>
+    <p>College ke latest notices yahan dikhaye jayenge.</p>
+
+    <div th:if="${#lists.isEmpty(notices)}" class="empty">
+        <h2>No notices available</h2>
+        <p>Abhi database mein koi notice nahi hai.</p>
+    </div>
+
+    <article class="notice" th:each="notice : ${notices}">
+        <h2 th:text="${notice['title']}">Notice title</h2>
+        <p th:text="${notice['description']}">Notice description</p>
+        <p class="meta">
+            Posted by:
+            <span th:text="${notice['posted_by_name']}">College Administration</span>
+            |
+            Date:
+            <span th:text="${notice['notice_date']}">Notice date</span>
+        </p>
+    </article>
+
+    <p><a href="/teacher/dashboard">Back to Teacher Dashboard</a></p>
+</main>
+</body>
+</html>

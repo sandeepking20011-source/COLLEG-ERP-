@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipt | College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; color: #222; margin: 24px; }
+        .receipt { max-width: 760px; margin: 20px auto; padding: 30px; background: white; border: 1px solid #ddd; }
+        h1, h2 { color: #17365d; text-align: center; }
+        .subtitle { text-align: center; color: #555; }
+        .row { display: flex; justify-content: space-between; gap: 20px; padding: 12px 0; border-bottom: 1px solid #ddd; }
+        .label { font-weight: bold; }
+        .amount { font-size: 22px; font-weight: bold; color: #17365d; }
+        .actions { text-align: center; margin: 20px; }
+        button, .back { display: inline-block; padding: 11px 18px; margin: 5px; border: 0; border-radius: 5px; background: #17365d; color: white; text-decoration: none; cursor: pointer; }
+        @media print {
+            body { background: white; margin: 0; }
+            .receipt { border: 0; margin: 0 auto; }
+            .actions { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <h1>COLLEGE ERP SYSTEM</h1>
+        <h2>FEE PAYMENT RECEIPT</h2>
+        <p class="subtitle">Official Payment Record</p>
+
+        <div class="row">
+            <span class="label">Receipt Number</span>
+            <span th:text="${'RCP-' + payment.paymentId}">RCP-1</span>
+        </div>
+        <div class="row">
+            <span class="label">Student Name</span>
+            <span th:text="${student.firstName + ' ' + (student.lastName != null ? student.lastName : '')}">Student Name</span>
+        </div>
+        <div class="row">
+            <span class="label">Enrollment Number</span>
+            <span th:text="${student.enrollmentNo != null ? student.enrollmentNo : '-'}">Enrollment</span>
+        </div>
+        <div class="row">
+            <span class="label">Student ID</span>
+            <span th:text="${payment.studentId}">1</span>
+        </div>
+        <div class="row">
+            <span class="label">Fee ID</span>
+            <span th:text="${payment.feeId != null ? payment.feeId : '-'}">1</span>
+        </div>
+        <div class="row">
+            <span class="label">Fee Type</span>
+            <span th:text="${fee != null ? fee.feeType : 'Not available'}">Tuition</span>
+        </div>
+        <div class="row">
+            <span class="label">Payment Date</span>
+            <span th:text="${payment.paymentDate != null ? payment.paymentDate : '-'}">Date</span>
+        </div>
+        <div class="row">
+            <span class="label">Payment Mode</span>
+            <span th:text="${payment.paymentMethod != null ? payment.paymentMethod : '-'}">Cash</span>
+        </div>
+        <div class="row">
+            <span class="label">Transaction ID</span>
+            <span th:text="${payment.transactionId != null ? payment.transactionId : '-'}">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Payment Status</span>
+            <span th:text="${payment.paymentStatus != null ? payment.paymentStatus : '-'}">Paid</span>
+        </div>
+        <div class="row">
+            <span class="label">Amount Paid</span>
+            <span class="amount">₹ <span th:text="${payment.amount}">2000.00</span></span>
+        </div>
+        <p class="subtitle">This receipt is generated from the College ERP payment record.</p>
+    </div>
+
+    <div class="actions">
+        <button type="button" onclick="window.print()">Print Receipt</button>
+        <a class="back" th:href="@{/accountant/receipts}">Back to Receipts</a>
+    </div>
+</body>
+</html>

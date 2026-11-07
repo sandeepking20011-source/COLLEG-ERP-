@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Management - College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 24px; color: #1f2937; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 24px; border-radius: 10px; }
+        h1, h2 { color: #173b70; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; }
+        textarea { min-height: 70px; }
+        a, button { display: inline-block; padding: 9px 13px; margin: 4px 2px; background: #174ea6; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; }
+        .danger { background: #b91c1c; }
+        .secondary { background: #64748b; }
+        .notice { padding: 12px; margin: 12px 0; border-radius: 5px; }
+        .success { background: #dcfce7; color: #166534; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; white-space: nowrap; }
+        th { background: #e8eef8; }
+        @media (max-width: 600px) { body { padding: 8px; } .container { padding: 12px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a th:href="@{/admin/dashboard}">Back to Admin Dashboard</a>
+    <h1>Students Management</h1>
+    <p>College ERP - Manage student records</p>
+
+    <div th:if="${message}" class="notice success" th:text="${message}"></div>
+    <div th:if="${error}" class="notice error" th:text="${error}"></div>
+
+    <h2 th:text="${student.studentId == null ? 'Add New Student' : 'Edit Student'}">Add New Student</h2>
+
+    <form th:action="@{/admin/students/save}" th:object="${student}" method="post">
+        <input type="hidden" th:field="*{studentId}">
+
+        <div class="form-grid">
+            <div>
+                <label for="enrollmentNo">Enrollment No. *</label>
+                <input id="enrollmentNo" type="text" th:field="*{enrollmentNo}" maxlength="50" required>
+            </div>
+            <div>
+                <label for="firstName">First Name *</label>
+                <input id="firstName" type="text" th:field="*{firstName}" maxlength="50" required>
+            </div>
+            <div>
+                <label for="lastName">Last Name</label>
+                <input id="lastName" type="text" th:field="*{lastName}" maxlength="50">
+            </div>
+            <div>
+                <label for="rollNo">Roll No.</label>
+                <input id="rollNo" type="text" th:field="*{rollNo}" maxlength="30">
+            </div>
+            <div>
+                <label for="gender">Gender</label>
+                <select id="gender" th:field="*{gender}">
+                    <option value="">Select gender</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>
+            <div>
+                <label for="dateOfBirth">Date of Birth</label>
+                <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+            </div>
+            <div>
+                <label for="phone">Phone</label>
+                <input id="phone" type="text" th:field="*{phone}" maxlength="20">
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" maxlength="100">
+            </div>
+            <div>
+                <label for="departmentId">Department ID</label>
+                <input id="departmentId" type="number" min="1" th:field="*{departmentId}">
+            </div>
+            <div>
+                <label for="courseId">Course ID</label>
+                <input id="courseId" type="number" min="1" th:field="*{courseId}">
+            </div>
+            <div>
+                <label for="userId">User ID (optional)</label>
+                <input id="userId" type="number" min="1" th:field="*{userId}">
+            </div>
+            <div>
+                <label for="semester">Semester</label>
+                <input id="semester" type="number" min="1" th:field="*{semester}">
+            </div>
+            <div>
+                <label for="admissionDate">Admission Date</label>
+                <input id="admissionDate" type="date" th:field="*{admissionDate}">
+            </div>
+        </div>
+
+        <p>
+            <label for="address">Address</label>
+            <textarea id="address" th:field="*{address}" maxlength="255"></textarea>
+        </p>
+
+        <button type="submit">Save Student</button>
+        <a class="secondary" th:href="@{/admin/students}">Clear Form</a>
+    </form>
+
+    <h2>Student Records</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Enrollment No.</th>
+                <th>Roll No.</th>
+                <th>Department ID</th>
+                <th>Course ID</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${students}">
+                <td th:text="${s.studentId}"></td>
+                <td th:text="${s.firstName + (s.lastName != null ? ' ' + s.lastName : '')}"></td>
+                <td th:text="${s.enrollmentNo}"></td>
+                <td th:text="${s.rollNo != null ? s.rollNo : '-'}"></td>
+                <td th:text="${s.departmentId != null ? s.departmentId : '-'}"></td>
+                <td th:text="${s.courseId != null ? s.courseId : '-'}"></td>
+                <td th:text="${s.phone != null ? s.phone : '-'}"></td>
+                <td>
+                    <a th:href="@{/admin/students/edit/{id}(id=${s.studentId})}">Edit</a>
+                    <a class="danger"
+                       th:href="@{/admin/students/delete/{id}(id=${s.studentId})}"
+                       onclick="return confirm('Kya aap is student record ko delete karna chahte hain?');">Delete</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(students)}">
+                <td colspan="8">Abhi koi student record nahi hai.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

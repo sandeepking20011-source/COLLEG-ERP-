@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College ERP - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+        .login-container {
+            width: 500px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h1 {
+            color: #2563eb;
+            font-size: 40px;
+        }
+        .logo p {
+            color: #666;
+            margin-top: 8px;
+            font-size: 20px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 20px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 20px;
+            outline: none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2563eb;
+        }
+        .password-box {
+            position: relative;
+        }
+        .password-box input {
+            padding-right: 80px;
+        }
+        .show-password {
+            position: absolute;
+            right: 15px;
+            top: 16px;
+            cursor: pointer;
+            color: #555;
+            font-size: 18px;
+        }
+        .remember {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
+        .remember label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .remember input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+        .forgot {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .forgot:hover {
+            text-decoration: underline;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            background: #1d4ed8;
+        }
+        .message {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 18px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 18px;
+            color: #777;
+        }
+        @media (max-width: 550px) {
+            .login-container {
+                width: 92%;
+                padding: 25px;
+            }
+            .logo h1 {
+                font-size: 32px;
+            }
+            .logo p {
+                font-size: 17px;
+            }
+            .form-group label {
+                font-size: 17px;
+            }
+            .form-group input, .form-group select {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="logo">
+        <h1>College ERP</h1>
+        <p>College Management System</p>
+    </div>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="role">Login As</label>
+            <select id="role" name="role" required>
+                <option value="">-- Select Role --</option>
+                <option value="admin">Administrator</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+                <option value="fees-module">Accountant</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="email" id="identifierLabel">Email / Username</label>
+            <input type="text" id="email" name="email" placeholder="Enter email or username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-box">
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+                <span class="show-password" onclick="togglePassword()">Show</span>
+            </div>
+        </div>
+
+        <div class="remember">
+            <label>
+                <input type="checkbox" id="remember"> Remember Me
+            </label>
+            <a href="#" class="forgot">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="login-btn">Login</button>
+
+        <div id="message" class="message"></div>
+    </form>
+
+    <div class="footer">
+        © 2026 College ERP System
+    </div>
+</div>
+
+<script>
+    // Show / Hide Password
+    function togglePassword() {
+        const password = document.getElementById("password");
+        const button = document.querySelector(".show-password");
+        if (password.type === "password") {
+            password.type = "text";
+            button.innerText = "Hide";
+        } else {
+            password.type = "password";
+            button.innerText = "Show";
+        }
+    }
+
+    // Student uses Enrollment Number; other roles use Email / Username.
+    const roleField = document.getElementById("role");
+    const identifierField = document.getElementById("email");
+    const identifierLabel = document.getElementById("identifierLabel");
+
+    function updateIdentifierLabel() {
+        if (roleField.value === "student") {
+            identifierLabel.innerText = "Enrollment Number";
+            identifierField.placeholder = "Enter Enrollment Number";
+        } else {
+            identifierLabel.innerText = "Email / Username";
+            identifierField.placeholder = "Enter email or username";
+        }
+    }
+
+    roleField.addEventListener("change", updateIdentifierLabel);
+    updateIdentifierLabel();
+    // Verify login credentials on the server before redirecting.
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const role = document.getElementById("role").value;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const message = document.getElementById("message");
+
+        if (!role || !email || !password) {
+            message.style.color = "red";
+            message.innerText = "Please fill all fields.";
+            return;
+        }
+
+        message.style.color = "#334155";
+        message.innerText = "Verifying login...";
+
+        try {
+            const formData = new URLSearchParams();
+            formData.append("role", role);
+            formData.append("email", email);
+            formData.append("password", password);
+
+            const response = await fetch("/login/authenticate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                },
+                body: formData.toString()
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                message.style.color = "red";
+                message.innerText = result.message || "Login failed.";
+                return;
+            }
+
+            message.style.color = "green";
+            message.innerText = "Login verified. Redirecting...";
+            window.location.href = result.redirectUrl;
+        } catch (error) {
+            message.style.color = "red";
+            message.innerText = "Login service unavailable. Check the ERP server.";
+        }
+    });
+</script>
+
+</body>
+</html>

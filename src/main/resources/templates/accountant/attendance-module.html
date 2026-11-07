@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attendance Module | College ERP</title>
+    <style>
+        body{font-family:Arial,sans-serif;margin:0;background:#f1f5f9;color:#1e293b}
+        header{background:#17365d;color:white;padding:20px 30px}
+        main{max-width:1100px;margin:25px auto;padding:24px;background:white;border-radius:12px}
+        form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+        label{display:block;font-weight:bold;margin-bottom:6px}
+        input,select,button{width:100%;padding:10px;box-sizing:border-box}
+        button{background:#17365d;color:white;border:0;border-radius:6px;cursor:pointer}
+        .notice{padding:12px;background:#eff6ff;border-radius:8px;margin:12px 0}
+        .error{background:#fee2e2;padding:12px;border-radius:8px}
+        .success{background:#dcfce7;padding:12px;border-radius:8px}
+        table{width:100%;border-collapse:collapse;margin-top:18px}
+        th,td{border:1px solid #cbd5e1;padding:9px;text-align:left}
+        th{background:#e2e8f0}
+        .table-wrap{overflow-x:auto}
+        a{color:#1d4ed8}
+    </style>
+</head>
+<body>
+<header><h1>College ERP - Attendance Module</h1></header>
+<main>
+    <h2>Attendance Management</h2>
+    <p>Accountant Dashboard / Attendance Module</p>
+
+    <p class="success" th:if="${message}" th:text="${message}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <div class="notice" th:if="${#lists.isEmpty(students)}">
+        Database mein student record nahi hai. Pehle valid student add karein.
+    </div>
+    <div class="notice" th:if="${#lists.isEmpty(subjects)}">
+        Database mein subject record nahi hai. Attendance save karne se pehle subject add karein.
+    </div>
+    <div class="notice" th:if="${#lists.isEmpty(teachers)}">
+        Teacher records nahi hain. Teacher optional hai; zaroorat ho to pehle teacher add karein.
+    </div>
+
+    <h3>Record Attendance</h3>
+    <form th:action="@{/accountant/attendance/save}" method="post">
+        <div>
+            <label for="studentId">Student</label>
+            <select id="studentId" name="studentId" required>
+                <option value="">Select student</option>
+                <option th:each="s : ${students}" th:value="${s['student_id']}"
+                    th:text="${s['enrollment_no'] + ' - ' + s['first_name'] + ' ' + s['last_name']}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="subjectId">Subject</label>
+            <select id="subjectId" name="subjectId" required>
+                <option value="">Select subject</option>
+                <option th:each="s : ${subjects}" th:value="${s['subject_id']}"
+                    th:text="${s['subject_code'] + ' - ' + s['subject_name'] + ' (Sem ' + s['semester'] + ')'}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="teacherId">Teacher (optional)</label>
+            <select id="teacherId" name="teacherId">
+                <option value="">Not selected</option>
+                <option th:each="t : ${teachers}" th:value="${t['teacher_id']}"
+                    th:text="${t['employee_code'] + ' - ' + t['first_name'] + ' ' + t['last_name']}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="attendanceDate">Attendance Date</label>
+            <input id="attendanceDate" name="attendanceDate" type="date" required>
+        </div>
+        <div>
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="PRESENT">Present</option>
+                <option value="ABSENT">Absent</option>
+                <option value="LATE">Late</option>
+            </select>
+        </div>
+        <div style="align-self:end">
+            <button type="submit" th:disabled="${#lists.isEmpty(students) or #lists.isEmpty(subjects)}">
+                Save Attendance
+            </button>
+        </div>
+    </form>
+
+    <h3>Recent Attendance Records</h3>
+    <div class="table-wrap">
+        <table>
+            <thead><tr>
+                <th>Date</th><th>Enrollment</th><th>Student</th>
+                <th>Subject</th><th>Teacher</th><th>Status</th>
+            </tr></thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(attendanceRecords)}">
+                    <td colspan="6">No attendance records found.</td>
+                </tr>
+                <tr th:each="a : ${attendanceRecords}">
+                    <td th:text="${a['attendance_date']}"></td>
+                    <td th:text="${a['enrollment_no']}"></td>
+                    <td th:text="${a['student_first_name'] + ' ' + a['student_last_name']}"></td>
+                    <td th:text="${a['subject_code'] + ' - ' + a['subject_name']}"></td>
+                    <td th:text="${a['teacher_first_name'] == null ? 'Not assigned' : a['teacher_first_name'] + ' ' + a['teacher_last_name']}"></td>
+                    <td th:text="${a['status']}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p><a href="/accountant/dashboard">Back to Accountant Dashboard</a></p>
+    <p><a href="/">Back to Login</a></p>
+</main>
+</body>
+</html>

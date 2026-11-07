@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Teacher - College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 24px; color: #1f2937; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 24px; border-radius: 10px; }
+        h1 { color: #173b70; }
+        a, button { display: inline-block; padding: 10px 14px; margin: 4px; background: #174ea6; color: white; text-decoration: none; border: 0; border-radius: 5px; cursor: pointer; }
+        input, select { width: 100%; padding: 10px; margin: 6px 0 12px; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 5px; }
+        label { font-weight: 600; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .muted { color: #64748b; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/admin/teachers">Back to Teachers</a>
+    <h1>Edit Teacher</h1>
+    <p class="muted">Teacher ID: <span th:text="${teacher['teacher_id']}"></span></p>
+
+    <form method="post"
+          th:action="@{/admin/teachers/update/{id}(id=${teacher['teacher_id']})}">
+        <div class="form-grid">
+            <div>
+                <label for="employeeCode">Employee Code *</label>
+                <input id="employeeCode" name="employeeCode" maxlength="30"
+                       th:value="${teacher['employee_code']}" required>
+            </div>
+            <div>
+                <label for="firstName">First Name *</label>
+                <input id="firstName" name="firstName" maxlength="50"
+                       th:value="${teacher['first_name']}" required>
+            </div>
+            <div>
+                <label for="lastName">Last Name</label>
+                <input id="lastName" name="lastName" maxlength="50"
+                       th:value="${teacher['last_name']}">
+            </div>
+            <div>
+                <label for="email">Teacher Email *</label>
+                <input id="email" name="email" type="email" maxlength="255"
+                       th:value="${teacher['email']}" required autocomplete="email">
+            </div>
+            <div>
+                <label for="initialPassword">Initial / New Password</label>
+                <input id="initialPassword" name="initialPassword" type="password"
+                       minlength="8" autocomplete="new-password"
+                       th:required="${teacher['user_id'] == null}">
+                <small>Login account linked nahi hai to Initial Password zaroori hai. Existing account ka password badalna ho tabhi bharein.</small>
+            </div>
+            <div>
+                <label for="departmentId">Department</label>
+                <select id="departmentId" name="departmentId">
+                    <option value="0"
+                            th:selected="${teacher['department_id'] == null}">Not assigned</option>
+                    <option th:each="department : ${departments}"
+                            th:value="${department['department_id']}"
+                            th:text="${department['department_name']}"
+                            th:selected="${department['department_id'] == teacher['department_id']}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" maxlength="20"
+                       th:value="${teacher['phone']}">
+            </div>
+            <div>
+                <label for="qualification">Qualification</label>
+                <input id="qualification" name="qualification" maxlength="100"
+                       th:value="${teacher['qualification']}">
+            </div>
+            <div>
+                <label for="joiningDate">Joining Date</label>
+                <input id="joiningDate" name="joiningDate" type="date"
+                       th:value="${teacher['joining_date']}">
+            </div>
+        </div>
+        <button type="submit">Update Teacher</button>
+        <a href="/admin/teachers">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

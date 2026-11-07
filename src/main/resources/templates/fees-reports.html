@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Reports | College ERP</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #243247; }
+        header { background: #172554; color: white; padding: 22px 5%; }
+        header h1 { margin: 0 0 7px; font-size: 25px; }
+        header p { margin: 0; color: #dbeafe; }
+        main { max-width: 1200px; margin: 28px auto; padding: 0 18px; }
+        .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+        a { color: #1d4ed8; text-decoration: none; }
+        .back { background: white; padding: 10px 15px; border-radius: 8px; border: 1px solid #dbe3ef; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 25px; }
+        .card, .panel { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 3px 12px #0f172a0a; }
+        .card p { color: #64748b; margin: 0 0 12px; }
+        .amount { font-size: 25px; font-weight: bold; overflow-wrap: anywhere; }
+        .panel { margin-bottom: 22px; }
+        h2 { font-size: 19px; margin: 0 0 16px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 720px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e8edf4; }
+        th { background: #f8fafc; color: #475569; font-size: 13px; }
+        td { font-size: 14px; }
+        .empty { text-align: center; color: #64748b; padding: 22px; }
+        footer { text-align: center; color: #64748b; padding: 15px; font-size: 13px; }
+        @media (max-width: 600px) { header h1 { font-size: 21px; } main { margin-top: 18px; } .amount { font-size: 22px; } }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Fee Reports</h1>
+    <p>College ERP System · Fee collection and payment summary</p>
+</header>
+
+<main>
+    <div class="top">
+        <div>
+            <h2>Financial Overview</h2>
+            <span>Review fee totals, outstanding balances and payments.</span>
+        </div>
+        <a class="back" th:href="@{/accountant/dashboard}">← Back to Accountant Dashboard</a>
+    </div>
+
+    <section class="cards">
+        <div class="card">
+            <p>Total Fees</p>
+            <div class="amount">₹ <span th:text="${totalFees}">0.00</span></div>
+        </div>
+        <div class="card">
+            <p>Total Collected</p>
+            <div class="amount">₹ <span th:text="${totalPaid}">0.00</span></div>
+        </div>
+        <div class="card">
+            <p>Total Outstanding</p>
+            <div class="amount">₹ <span th:text="${totalBalance}">0.00</span></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Student Fee Details</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Fee ID</th>
+                    <th>Student ID</th>
+                    <th>Fee Type</th>
+                    <th>Total Amount</th>
+                    <th>Paid Amount</th>
+                    <th>Balance</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="fee : ${fees}">
+                    <td th:text="${fee.feeId}">1</td>
+                    <td th:text="${fee.studentId}">1</td>
+                    <td th:text="${fee.feeType}">Tuition</td>
+                    <td th:text="${fee.amount}">0.00</td>
+                    <td th:text="${fee.paidAmount}">0.00</td>
+                    <td th:text="${fee.balance}">0.00</td>
+                    <td th:text="${fee.dueDate != null ? fee.dueDate : '-'}">-</td>
+                    <td th:text="${fee.paymentStatus != null ? fee.paymentStatus : 'Pending'}">Pending</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(fees)}">
+                    <td colspan="8" class="empty">No fee records found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Payment History</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Student ID</th>
+                    <th>Fee ID</th>
+                    <th>Amount</th>
+                    <th>Payment Date</th>
+                    <th>Method</th>
+                    <th>Transaction ID</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.paymentId}">1</td>
+                    <td th:text="${payment.studentId}">1</td>
+                    <td th:text="${payment.feeId}">1</td>
+                    <td th:text="${payment.amount}">0.00</td>
+                    <td th:text="${payment.paymentDate != null ? payment.paymentDate : '-'}">-</td>
+                    <td th:text="${payment.paymentMethod != null ? payment.paymentMethod : '-'}">-</td>
+                    <td th:text="${payment.transactionId != null ? payment.transactionId : '-'}">-</td>
+                    <td th:text="${payment.paymentStatus != null ? payment.paymentStatus : '-'}">-</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(payments)}">
+                    <td colspan="8" class="empty">No payment records found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer>College ERP System · Fee Reports</footer>
+</body>
+</html>

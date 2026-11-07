@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Fee - College ERP</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f5f9;margin:0;padding:24px}
+main{max-width:650px;margin:auto;background:white;padding:24px;border-radius:12px;box-shadow:0 3px 15px #0001}
+h1{color:#17365d}label{display:block;margin-top:15px;font-weight:bold}
+input,select{box-sizing:border-box;width:100%;padding:11px;margin-top:6px;border:1px solid #bbb;border-radius:6px}
+button{margin-top:20px;background:#176b45;color:white;padding:12px 20px;border:0;border-radius:6px;cursor:pointer}
+a{color:#1759a5;margin-right:14px}.msg{padding:10px;background:#e7f6ec;color:#14532d}.err{padding:10px;background:#fee2e2;color:#991b1b}
+</style>
+</head>
+<body>
+<main>
+<h1>Add New Fee</h1>
+<p>Student ke liye naya fee record banayein.</p>
+<p class="msg" th:if="${message}" th:text="${message}"></p>
+<p class="err" th:if="${error}" th:text="${error}"></p>
+<form th:action="@{/accountant/fees/save}" th:object="${fee}" method="post">
+<label>Student *</label>
+<select th:field="*{studentId}" required>
+<option value="">Select Student</option>
+<option th:each="student : ${students}" th:value="${student.studentId}"
+th:text="${student.studentId + ' - ' + student.firstName + ' ' + student.lastName}"></option>
+</select>
+<label>Fee Type *</label>
+<input type="text" th:field="*{feeType}" maxlength="50" placeholder="Tuition Fee" required>
+<label>Total Amount (Rs.) *</label>
+<input type="number" th:field="*{amount}" min="0.01" step="0.01" required>
+<label>Due Date</label>
+<input type="date" th:field="*{dueDate}">
+<button type="submit">Save Fee</button>
+</form>
+<hr>
+<a href="/accountant/dashboard">Fees Dashboard</a>
+<a href="/accountant/students">Student Fees</a>
+<a href="/accountant/pending">Pending Fees</a>
+</main>
+</body>
+</html>

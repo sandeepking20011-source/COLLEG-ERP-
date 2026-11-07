@@ -1,41 +1,30 @@
 # College ERP System
 
-A College ERP application built with Java 21, Spring Boot, Thymeleaf, Spring Data JPA, and MySQL.
+A Java 21 / Spring Boot application using Thymeleaf, Spring Data JPA, and MySQL.
 
-## Technology Stack
-- Java 21
-- Spring Boot
-- Spring MVC and Thymeleaf
-- Spring Data JPA / Hibernate
-- MySQL 8
-- Maven
+## Local run
 
-## Requirements
-- JDK 21
-- MySQL 8.x
+1. Create a MySQL database named `collegeerp`.
+2. Copy `src/main/resources/application.properties.example` to `src/main/resources/application.properties`.
+3. Set local database credentials and Razorpay **test-mode** credentials in the local properties file.
+4. Run `./mvnw spring-boot:run` (Windows PowerShell: `./mvnw.cmd spring-boot:run`).
+5. Open `http://localhost:8081`.
 
-## Local Setup (Windows PowerShell)
-1. Create the database:
-   ```sql
-   CREATE DATABASE collegeerp;
-   ```
-2. Copy `src/main/resources/application.properties.example` to
-   `src/main/resources/application.properties`.
-3. Set your local database and Razorpay test credentials in the local
-   `application.properties` file. Do not commit that file.
-4. Build and run:
-   ```powershell
-   .\mvnw.cmd clean package
-   .\mvnw.cmd spring-boot:run
-   ```
-5. Open http://localhost:8081
+## Railway deployment configuration
+
+Set these Railway service variables:
+- `SPRING_DATASOURCE_URL` — JDBC URL for the Railway MySQL service
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `RAZORPAY_KEY_ID` — Razorpay test key ID
+- `RAZORPAY_KEY_SECRET` — Razorpay test secret
+
+Railway provides `PORT`; the application config uses it automatically.
+
+## Database safety
+
+The uploaded local ZIP contained database backups with student/user records. Those backups and all SQL exports are intentionally excluded from this deployment bundle. The Railway database must be initialized with a reviewed schema before the application can serve real data. No local student records or passwords are copied by this bundle.
 
 ## Security
-- Real `application.properties` is excluded from Git.
-- Do not commit passwords, Razorpay secrets, API tokens, SQL dumps,
-  real student records, or local backup files.
-- Use Razorpay Test Mode credentials only while testing.
 
-## Database
-This repository does not include a database dump. Create/configure your
-local MySQL database and required tables before running the application.
+Do not commit `application.properties`, `.env`, SQL dumps, database passwords, Razorpay secrets, or real student records.

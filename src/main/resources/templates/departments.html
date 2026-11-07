@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Departments Management - College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 25px; color: #1e293b; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; }
+        h1 { color: #173b70; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 14px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; }
+        input { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+        button, .back { display: inline-block; padding: 11px 16px; background: #174ea6; color: white; border: 0; border-radius: 6px; text-decoration: none; cursor: pointer; margin-top: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 22px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #e8eef8; }
+        .message { padding: 10px; background: #dcfce7; margin: 12px 0; }
+        .error { padding: 10px; background: #fee2e2; margin: 12px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a class="back" href="/admin/dashboard">Back to Admin Dashboard</a>
+    <h1>Departments Management</h1>
+    <p>Add departments and view records saved in the database.</p>
+
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <h2>Add Department</h2>
+    <form method="post" action="/admin/departments/save">
+        <div class="form-grid">
+            <div>
+                <label for="departmentName">Department Name</label>
+                <input id="departmentName" name="departmentName" maxlength="100" required>
+            </div>
+            <div>
+                <label for="departmentCode">Department Code</label>
+                <input id="departmentCode" name="departmentCode" maxlength="20" required>
+            </div>
+        </div>
+        <button type="submit">Save Department</button>
+    </form>
+
+    <h2>Saved Departments</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Department Name</th><th>Department Code</th></tr></thead>
+        <tbody>
+            <tr th:each="dept : ${departments}">
+                <td th:text="${dept['department_id']}"></td>
+                <td th:text="${dept['department_name']}"></td>
+                <td th:text="${dept['department_code']}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(departments)}">
+                <td colspan="3">No departments found. Add the first department above.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

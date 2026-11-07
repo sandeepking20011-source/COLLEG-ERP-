@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Management | College ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f4f6f9; color: #222; }
+        main { max-width: 1000px; margin: auto; }
+        section { background: white; padding: 22px; margin-bottom: 22px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input { width: 100%; box-sizing: border-box; padding: 10px; margin-top: 5px; }
+        button { margin-top: 18px; padding: 10px 18px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #eef2f7; }
+        .success { color: #176b32; }
+        .error { color: #b42318; }
+        .back { display: inline-block; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+<main>
+    <a class="back" href="/admin/dashboard">Back to Admin Dashboard</a>
+    <h1>Subject Management</h1>
+
+    <section>
+        <h2>Add Subject</h2>
+        <p class="success" th:if="${successMessage}" th:text="${successMessage}"></p>
+        <p class="error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+        <form method="post" action="/admin/subjects/save">
+            <label for="subjectCode">Subject Code</label>
+            <input id="subjectCode" name="subjectCode" maxlength="30" required>
+
+            <label for="subjectName">Subject Name</label>
+            <input id="subjectName" name="subjectName" maxlength="100" required>
+
+            <label for="semester">Semester</label>
+            <input id="semester" name="semester" type="number" min="1" required>
+
+            <label for="credits">Credits</label>
+            <input id="credits" name="credits" type="number" min="0" value="0">
+
+            <button type="submit">Save Subject</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Saved Subjects</h2>
+        <p th:if="${#lists.isEmpty(subjects)}">Abhi koi subject save nahi hai.</p>
+        <table th:unless="${#lists.isEmpty(subjects)}">
+            <thead>
+            <tr>
+                <th>ID</th><th>Code</th><th>Subject Name</th><th>Semester</th><th>Credits</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="subject : ${subjects}">
+                <td th:text="${subject.subject_id}"></td>
+                <td th:text="${subject.subject_code}"></td>
+                <td th:text="${subject.subject_name}"></td>
+                <td th:text="${subject.semester}"></td>
+                <td th:text="${subject.credits}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <p><a href="/teacher/marks">Open Teacher Marks</a></p>
+</main>
+</body>
+</html>

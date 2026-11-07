@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Examination</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 25px; background: #f4f6f9; }
+        main { max-width: 850px; margin: auto; background: white; padding: 25px; border-radius: 10px; }
+        h1 { margin-top: 0; }
+        form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+        label { display: flex; flex-direction: column; gap: 7px; }
+        input, select { padding: 10px; border: 1px solid #bbb; border-radius: 5px; }
+        button, a { padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+        .wide { grid-column: 1 / -1; }
+        @media(max-width: 600px) { form { grid-template-columns: 1fr; } .wide { grid-column: auto; } }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Edit Examination</h1>
+
+    <form method="post" th:action="@{/admin/examinations/{id}/update(id=${exam['exam_id']})}">
+        <label>Exam Name
+            <input type="text" name="examName" required maxlength="100"
+                   th:value="${exam['exam_name']}">
+        </label>
+
+        <label>Exam Type
+            <input type="text" name="examType" maxlength="50"
+                   th:value="${exam['exam_type']}">
+        </label>
+
+        <label>Course
+            <select name="courseId">
+                <option value="">Select Course</option>
+                <option th:each="course : ${courses}"
+                        th:value="${course['course_id']}"
+                        th:text="${course['course_name']}"
+                        th:selected="${course['course_id'] == exam['course_id']}">
+                </option>
+            </select>
+        </label>
+
+        <label>Semester
+            <input type="number" name="semester" min="1"
+                   th:value="${exam['semester']}">
+        </label>
+
+        <label>Exam Date
+            <input type="date" name="examDate"
+                   th:value="${exam['exam_date_input']}">
+        </label>
+
+        <label>Start Time
+            <input type="time" name="startTime"
+                   th:value="${exam['start_time_input']}">
+        </label>
+
+        <label>End Time
+            <input type="time" name="endTime"
+                   th:value="${exam['end_time_input']}">
+        </label>
+
+        <label>Academic Year
+            <input type="text" name="academicYear" maxlength="20"
+                   th:value="${exam['academic_year']}">
+        </label>
+
+        <label>Status
+            <select name="status">
+                <option value="Scheduled" th:selected="${exam['status'] == 'Scheduled'}">Scheduled</option>
+                <option value="Ongoing" th:selected="${exam['status'] == 'Ongoing'}">Ongoing</option>
+                <option value="Completed" th:selected="${exam['status'] == 'Completed'}">Completed</option>
+                <option value="Cancelled" th:selected="${exam['status'] == 'Cancelled'}">Cancelled</option>
+            </select>
+        </label>
+
+        <div class="wide">
+            <button type="submit">Update Examination</button>
+            <a href="/admin/examination-module.html">Cancel / Back</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

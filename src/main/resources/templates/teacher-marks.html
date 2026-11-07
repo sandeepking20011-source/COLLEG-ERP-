@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher Marks | College ERP</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182235;font-family:Arial,sans-serif}
+header{background:#172554;color:white;padding:22px 5%}main{max-width:1150px;margin:28px auto;padding:0 18px}
+.panel{background:white;padding:22px;border-radius:12px;margin-bottom:22px;box-shadow:0 3px 14px #15223812}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+label{font-weight:600;font-size:14px}input,select{display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #cbd5e1;border-radius:7px;background:white}
+button{border:0;border-radius:7px;background:#1d4ed8;color:white;padding:12px 20px;cursor:pointer;font-weight:bold}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:750px}th,td{padding:12px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#eff6ff}
+.notice{padding:12px;border-radius:7px;margin-bottom:16px;background:#dcfce7;color:#166534}.error{background:#fee2e2;color:#991b1b}
+a{color:#1d4ed8}.muted{color:#64748b}
+</style>
+</head>
+<body>
+<header><h1>Teacher Marks &amp; Results</h1><p>Enter marks and review saved student records.</p></header>
+<main>
+<p><a href="/teacher/dashboard">← Back to Teacher Dashboard</a></p>
+
+<div th:if="${message}" class="notice" th:text="${message}"></div>
+<div th:if="${error}" class="notice error" th:text="${error}"></div>
+
+<section class="panel">
+<h2>Marks Entry</h2>
+<p class="muted">Select a student and subject, then enter marks.</p>
+<div th:if="${#lists.isEmpty(students) or #lists.isEmpty(subjects)}" class="notice error">
+Student ya subject record nahi mila. Pehle students aur subjects add karein.
+</div>
+<form th:action="@{/teacher/marks/save}" method="post">
+<label>Student
+<select name="studentId" required>
+<option value="">Select student</option>
+<option th:each="s : ${students}" th:value="${s['student_id']}"
+th:text="${s['enrollment_no'] + ' - ' + s['first_name'] + ' ' + s['last_name']}"></option>
+</select>
+</label>
+<label>Subject
+<select name="subjectId" required>
+<option value="">Select subject</option>
+<option th:each="s : ${subjects}" th:value="${s['subject_id']}"
+th:text="${s['subject_code'] + ' - ' + s['subject_name']}"></option>
+</select>
+</label>
+<label>Examination
+<select name="examId" required>
+<option value="">Select examination</option>
+<option th:each="e : ${exams}"
+        th:value="${e['exam_id']}"
+        th:text="${e['exam_label']}"></option>
+</select>
+</label>
+<label>Marks Obtained
+<input type="number" name="marksObtained" min="0" max="999.99" step="0.01" required>
+</label>
+<label>Maximum Marks
+<input type="number" name="maxMarks" min="0.01" max="999.99" step="0.01" value="100" required>
+</label>
+
+<div><button type="submit" th:disabled="${#lists.isEmpty(students) or #lists.isEmpty(subjects)}">Save Marks</button></div>
+</form>
+<p class="muted">Grade automatically calculate hoga: A+ 90%, A 80%, B 70%, C 60%, D 40%, otherwise F.</p>
+</section>
+
+<section class="panel">
+<h2>Saved Marks Records</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Student</th><th>Enrollment</th><th>Subject</th><th>Exam</th><th>Obtained</th><th>Maximum</th><th>Grade</th><th>Date</th></tr></thead>
+<tbody>
+<tr th:each="m : ${marksEntries}">
+<td th:text="${m['student_name']}"></td>
+<td th:text="${m['enrollment_no']}"></td>
+<td th:text="${m['subject_name']}"></td>
+<td th:text="${m['exam_type']}"></td>
+<td th:text="${m['marks_obtained']}"></td>
+<td th:text="${m['max_marks']}"></td>
+<td th:text="${m['grade']}"></td>
+<td th:text="${m['exam_date']}"></td>
+</tr>
+<tr th:if="${#lists.isEmpty(marksEntries)}"><td colspan="8" class="muted">No marks records found yet.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</body>
+</html>
